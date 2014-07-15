@@ -1,12 +1,11 @@
 {{
-  var meta = it.meta[it.version];
-  var base = meta.base || "apache-tomcat";
+  var base = it.config.base;
   var majorVersion = it.version.replace(/^([^.]+).*$/,"$1");
-  var url = meta.url ||
+  var url = it.config.url ||
            "http://archive.apache.org/dist/tomcat/tomcat-" + majorVersion +
            "/v${TOMCAT_VERSION}/bin/" + base + "-${TOMCAT_VERSION}.tar.gz";
-  var toRemove = meta.toRemove || [ "examples", "docs" ];
-  var roleFile = meta.roleFile || { "file" : "tomcat-users.xml", "dir" : "" };
+  var toRemove = it.config.toRemove;
+  var roleFile = it.config.roleFile;
 }}
 FROM {{= it.javaBaseImage }}
 
@@ -14,9 +13,9 @@ MAINTAINER {{= it.maintainer }}
 
 EXPOSE 8080
 
-ENV TOMCAT_VERSION {{= meta.version }}
+ENV TOMCAT_VERSION {{= it.config.version }}
 ENV DEPLOY_DIR /maven
-{{? meta.useJavaHome}}
+{{? it.config.useJavaHome}}
 ENV JAVA_HOME {{= it.javaHome }}
 {{?}}
 
@@ -42,3 +41,4 @@ ENV CATALINA_HOME /opt/tomcat
 ENV PATH $PATH:$CATALINA_HOME/bin
 
 CMD /opt/tomcat/bin/deploy-and-run.sh
+

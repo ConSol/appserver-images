@@ -35,13 +35,20 @@ servers.forEach(function(server) {
                 }
                 var templateHasChanged =
                     fillTemplate(
-                            server + "/" + version + "/" + file,
+                        server + "/" + version + "/" + file,
                         template.templ,
-                        _.extend({ "version": version },config));
+                        _.extend(
+                            {},
+                            config,
+                            { "version": version,
+                              "config": _.extend({},config.meta['default'],config.meta[version])}
+                        ));
                 changed = changed || templateHasChanged;
             });
             if (!changed) {
                 console.log("       UNCHANGED".yellow);
+            } else {
+
             }
         });
     });
@@ -73,17 +80,17 @@ function execWithTemplates(server,templFunc) {
 }
 
 function fillTemplate(file,template,config) {
-    var newContent = template(config).trim();
+    var newContent = template(config).trim() + "\n";
     var label = file.replace(/.*\/([^\/]+)$/,"$1");
     if (!newContent.length) {
         console.log("       " + label + ": " + "SKIPPED".grey);
         return false;
     } else {
         var exists = fs.existsSync(file);
-        var oldContent = exists ? fs.readFileSync(file, "utf8").trim() : undefined;
-        if (newContent !== oldContent) {
-            console.log(newContent);
+        var oldContent = exists ? fs.readFileSync(file, "utf8") : undefined;
+        if (newContent.trim() !== oldContent.trim()) {
             console.log("       " + label + ": " + (exists ? "CHANGED".green : "NEW".yellow));
+            fs.writeFileSync(file,newContent,{ "encoding" : "utf8"});
             return true;
         }
     }

@@ -21,5 +21,5 @@ Features:
 * Documentation and examples have been removed
 * Command: `/opt/tomcat/bin/deploy-and-run.sh` which links .war files from */maven* to 
   */opt/tomcat/webapps* and then calls `catalina.sh run`
-* /dev/urandom is used instead of /dev/random for faster startup times
+* Sets `-Djava.security.egd=file:/dev/./urandom` for faster startup times
   (though a bit less secure)

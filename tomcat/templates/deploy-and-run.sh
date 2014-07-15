@@ -1,9 +1,4 @@
 #!/bin/sh
-{{
-   var meta = it.meta[it.version];
-   var optsVar = meta.optsVar || "CATALINA_OPTS";
-   var runCmd = meta.runCmd || "catalina.sh";
-}}
 DIR=${DEPLOY_DIR:-/maven}
 echo "Checking *.war in $DIR"
 if [ -d $DIR ]; then
@@ -14,5 +9,5 @@ if [ -d $DIR ]; then
   done
 fi
 # Use faster (though more unsecure) random number generator
-export {{= optsVar}}="-Djava.security.egd=file:/dev/./urandom"
-/opt/tomcat/bin/{{= runCmd}} run
+export {{= it.config.optsVar}}="-Djava.security.egd=file:/dev/./urandom"
+/opt/tomcat/bin/{{= it.config.runCmd}} run

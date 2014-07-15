@@ -1,5 +1,4 @@
 #!/bin/sh
-
 DIR=${DEPLOY_DIR:-/maven}
 echo "Checking *.war in $DIR"
 if [ -d $DIR ]; then
@@ -10,5 +9,5 @@ if [ -d $DIR ]; then
   done
 fi
 # Use faster (though more unsecure) random number generator
-export CATATLINA_OPTS="-Djava.security.egd=file:/dev/./urandom"
+export CATALINA_OPTS="-Djava.security.egd=file:/dev/./urandom"
 /opt/tomcat/bin/catalina.sh run

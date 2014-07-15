@@ -13,14 +13,14 @@ exported from a directory "/maven".
 
 Features:
 
-* Tomcat Version: **{{= it.meta[it.version].version}}**
+* Tomcat Version: **{{= it.config.version}}**
 * Java Version: **{{= it.javaVersion}}** (base image: *{{= it.javaBaseImage}}*)
 * Port: **8080**
 * User **admin** (Password: **admin**) has been added to access the admin
   applications */host-manager* and */manager*)
 * Documentation and examples have been removed
 * Command: `/opt/tomcat/bin/deploy-and-run.sh` which links .war files from */maven* to 
-  */opt/tomcat/webapps* and then calls `catalina.sh run`
+  */opt/tomcat/webapps* and then calls `{{= it.config.runCmd}} run`
 * Sets `-Djava.security.egd=file:/dev/./urandom` for faster startup times
   (though a bit less secure)
   

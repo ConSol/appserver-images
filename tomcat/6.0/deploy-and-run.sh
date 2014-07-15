@@ -1,5 +1,4 @@
 #!/bin/sh
-
 DIR=${DEPLOY_DIR:-/maven}
 echo "Checking *.war in $DIR"
 if [ -d $DIR ]; then

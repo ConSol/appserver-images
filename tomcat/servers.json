@@ -13,6 +13,14 @@
     },
 
     "meta": {
+        "default": {
+            "base" : "apache-tomcat",
+            "useJavaHome" : false,
+            "roleFile" : { "file" : "tomcat-users.xml", "dir" : ""},
+            "optsVar" : "CATALINA_OPTS",
+            "runCmd" : "catalina.sh",
+            "toRemove" : []
+        },
         "3.3": {
             "version": "3.3.2",
             "base": "jakarta-tomcat",
