@@ -1,7 +1,7 @@
 {
     // All supported versions
     "versions" : [ "3.3", "4.1", "5.0", "5.5", "6.0", "7.0", "8.0" ],
-    //"versions" : [ "7.0", "8.0" ],
+
     "mappings" : {
                 "3.3": { "__tomcat-users-v2.xml" : "admin-users.xml" },
                 "4.1": { "__tomcat-users-v2.xml" : "tomcat-users.xml" },
@@ -56,7 +56,7 @@
             "toRemove": [ "examples", "docs" ]
         },
         "8.0": {
-            "version": "8.0.8",
+            "version": "8.0.9",
             "toRemove": [ "examples", "docs" ]
         }
     }
