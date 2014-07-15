@@ -13,7 +13,7 @@ exported from a directory "/maven".
 
 Features:
 
-* Tomcat Version: **8.0.8**
+* Tomcat Version: **8.0.9**
 * Java Version: **Oracle 1.7.0_51-b13** (base image: *dockerfile/java*)
 * Port: **8080**
 * User **admin** (Password: **admin**) has been added to access the admin
