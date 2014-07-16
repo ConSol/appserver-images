@@ -18,7 +18,7 @@ Currently the following servers with
 
 * Apache Tomcat: 3.3, 4.1, 5.0, 5.5, 6.0, 7.0, 8.0
 
-All server images are pushed to [hub.docker.io](https://registry.hub.docker.com/repos/consol/) and be faved there ;-)
+All server images are pushed to [hub.docker.io](https://registry.hub.docker.com/repos/consol/) and can be faved there ;-)
 
 ## docker-appserver.js
 
