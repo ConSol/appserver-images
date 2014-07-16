@@ -4,11 +4,19 @@ var dot = require('dot');
 dot.templateSettings.strip = false;
 
 var fs = require('fs');
-var colors = require('colors');
+var fstream = require("fstream");
+require('colors');
 var _ = require('underscore');
+var Docker = require('dockerode');
+var tarCmd = "tar";
+var child = require('child_process');
+var stream = require('stream');
+var finish = require('finish');
+
 JSON.minify = JSON.minify || require("node-json-minify");
 
 var opts = parseOpts();
+
 
 //console.info(opts);
 
@@ -20,8 +28,10 @@ if (fs.existsSync("config.json")) {
     globalConfig = JSON.parse(JSON.minify(fs.readFileSync("config.json", "utf8")));
 }
 
+console.log("Creating Automated Builds\n=========================\n");
+
 servers.forEach(function(server) {
-    console.log(server);
+    console.log(server.cyan);
     var config =
         _.extend({},
             globalConfig,
@@ -29,8 +39,8 @@ servers.forEach(function(server) {
     var versions = extractVersions(config);
     execWithTemplates(server,function(templates) {
         versions.forEach(function (version) {
-            console.log("    " + version);
-            ensureDir(server + "/" + version);
+            console.log("    " + version.green);
+            ensureDir(__dirname + "/" + server + "/" + version);
             var changed = false;
             templates.forEach(function (template) {
                 var file = checkForMapping(config,version,template.file);
@@ -59,6 +69,12 @@ servers.forEach(function(server) {
     });
 });
 
+if (opts.options.build) {
+    buildImages(opts);
+}
+
+// ===============================================================================
+
 function checkForMapping(config,version,file) {
     if (/^__.*$/.test(file)) {
         var mappings = config.mappings || {};
@@ -71,17 +87,15 @@ function checkForMapping(config,version,file) {
 
 function execWithTemplates(server,templFunc) {
     var templ_dir = server + "/templates";
-    fs.readdir(templ_dir,function(err,templates) {
-        var ret = [];
-        if (err) throw err;
-        templates.forEach(function (template) {
-            ret.push({
-                "templ" : dot.template(fs.readFileSync(templ_dir + "/" + template)),
-                "file" : template
-            });
+    var templates = fs.readdirSync(templ_dir);
+    var ret = [];
+    templates.forEach(function (template) {
+        ret.push({
+            "templ" : dot.template(fs.readFileSync(templ_dir + "/" + template)),
+            "file" : template
         });
-        templFunc(ret);
     });
+    templFunc(ret);
 }
 
 function fillTemplate(file,template,config) {
@@ -117,7 +131,10 @@ function parseOpts() {
     var getopt = new Getopt([
         ['s' , 'server=ARG+', 'Servers for which to create container images (e.g. "tomcat")'],
         ['v' , 'version=ARG+', 'Versions of a given server to create (e.g. "7.0" for tomcat)'],
-        ['h' , 'help'                , 'display this help']
+        ['b' , 'build', 'Build image(s)'],
+        ['d' , 'host', 'Docker hostname (default: localhost)'],
+        ['p' , 'port', 'Docker port (default: 2375)'],
+        ['h' , 'help', 'display this help']
     ]);
 
     var help =
@@ -150,13 +167,13 @@ function getServers(opts) {
 }
 
 function getAllServers() {
-    return _.filter(fs.readdirSync("."), function (f) {
+    return _.filter(fs.readdirSync(__dirname), function (f) {
         return fs.existsSync(f + "/servers.json");
     });
 }
 
 function getServersConfig(server) {
-    return JSON.parse(JSON.minify(fs.readFileSync(server + "/servers.json", "utf8")));
+    return JSON.parse(JSON.minify(fs.readFileSync(__dirname + "/" + server + "/servers.json", "utf8")));
 }
 
 function extractVersions(config) {
@@ -168,3 +185,89 @@ function extractVersions(config) {
         return config.versions;
     }
 }
+
+function buildImages(opts) {
+    console.log("\n\nBuilding Images\n===============\n");
+
+    var docker = new Docker(getDockerConnectionsParams(opts));
+
+    var servers = getServers(opts);
+    servers.forEach(function(server) {
+        console.log(server.cyan);
+        var versions = extractVersions(getServersConfig(server));
+        doBuildImages(docker,server,versions);
+    });
+}
+
+function getFullVersion(server,version) {
+    var config = getServersConfig(server);
+    return config.meta[version].version;
+}
+
+function doBuildImages(docker,server,versions) {
+    if (versions.length > 0) {
+        var version = versions.shift();
+        console.log("    " + version.green);
+        var tar = child.spawn(tarCmd, ['-c', '.'], { cwd: __dirname + "/" + server + "/" + version });
+        var name = "consol/" + server + "-" + version;
+        var fullName = name + ":" + getFullVersion(server,version);
+        docker.buildImage(
+            tar.stdout, { "t": fullName, "forcerm": true, "q": true },
+            function (error, stream) {
+                if (error) {
+                    throw error;
+                }
+                stream.pipe(getResponseStream());
+                stream.on('end', function () {
+                    docker.getImage(fullName).tag({repo: name }, function (error, result) {
+                        if (error) { throw error; }
+                        console.log(result);
+                    });
+                    doBuildImages(docker,server,versions);
+                });
+            });
+    }
+}
+
+function getResponseStream() {
+    var buildResponseStream = new stream.Writable();
+    buildResponseStream._write = function (chunk, encoding, done) {
+        var resp = JSON.parse(chunk.toString());
+        if (resp.stream) {
+            process.stdout.write(resp.stream);
+        }
+        if (resp.errorDetail) {
+            process.stderr.write(resp.stream);
+        }
+        done();
+    };
+    return buildResponseStream;
+}
+
+function getDockerConnectionsParams(opts) {
+    if (opts.options.host) {
+        return {
+            "host": "http://" + opts.options.host,
+            "port": opts.options.port || 2375
+        };
+    } else if (process.env.DOCKER_HOST) {
+        var parts = process.env.DOCKER_HOST.match(/^tcp:\/\/(.+?)\:?(\d+)?$/i);
+        if (parts !== null) {
+            return {
+                "host" : "http://" + parts[1],
+                "port" : parts[2] || 2375
+            };
+        } else {
+            return {
+                "socketPath" : process.env.DOCKER_HOST
+            };
+        }
+    } else {
+        return {
+            "host" : "http://localhost",
+            "port" : 2375
+        };
+    }
+
+}
+

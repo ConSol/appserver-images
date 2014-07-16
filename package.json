@@ -8,6 +8,9 @@
         "colors": "*",
         "underscore": "*",
         "node-json-minify": "*",
-        "node-getopt" : "*"
+        "node-getopt" : "*",
+        "dockerode" : "*",
+        "fstream" : "*",
+        "finish" : "*"
     }
 }
