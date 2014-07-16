@@ -1,14 +1,19 @@
 #!/usr/local/bin/node
 
 var dot = require('dot');
+dot.templateSettings.strip = false;
+
 var fs = require('fs');
 var colors = require('colors');
 var _ = require('underscore');
 JSON.minify = JSON.minify || require("node-json-minify");
 
-var servers = [ "tomcat" ];
+var opts = parseOpts();
 
-dot.templateSettings.strip = false;
+//console.info(opts);
+
+// All supported servers which must be present as a sub-directory
+var servers = getServers(opts);
 
 var globalConfig = {};
 if (fs.existsSync("config.json")) {
@@ -20,8 +25,8 @@ servers.forEach(function(server) {
     var config =
         _.extend({},
             globalConfig,
-            JSON.parse(JSON.minify(fs.readFileSync(server + "/servers.json", "utf8"))));
-    var versions = config.versions;
+            getServersConfig(server));
+    var versions = extractVersions(config);
     execWithTemplates(server,function(templates) {
         versions.forEach(function (version) {
             console.log("    " + version);
@@ -104,5 +109,62 @@ function ensureDir(dir) {
     var stat = fs.statSync(dir);
     if (!stat.isDirectory()) {
         throw new Error(dir + " is not a directory");
+    }
+}
+
+function parseOpts() {
+    var Getopt = require('node-getopt');
+    var getopt = new Getopt([
+        ['s' , 'server=ARG+', 'Servers for which to create container images (e.g. "tomcat")'],
+        ['v' , 'version=ARG+', 'Versions of a given server to create (e.g. "7.0" for tomcat)'],
+        ['h' , 'help'                , 'display this help']
+    ]);
+
+    var help =
+        "Usage: node docker-appserver.js [OPTION]\n" +
+        "Generator for automated Docker builds.\n" +
+        "\n" +
+        "[[OPTIONS]]\n" +
+        "\n" +
+        "This script creates so called 'automated builds' for Java application server\n" +
+        "which can be registered at hub.docker.io\n\n" +
+        "It uses templates for covering multiple version of appserver.\n\n" +
+        "Supported servers:\n\n";
+    var servers = getAllServers();
+    servers.forEach(function (server) {
+        var config = getServersConfig(server);
+        help += "   " + server  + ": " + config.versions.join(", ") + "\n";
+    });
+
+    return getopt.bindHelp(help).parseSystem();
+}
+
+function getServers(opts) {
+    if (opts.options.server) {
+        return _.filter(getAllServers(), function (server) {
+            return _.contains(opts.options.server,server);
+        });
+    } else {
+        return getAllServers();
+    }
+}
+
+function getAllServers() {
+    return _.filter(fs.readdirSync("."), function (f) {
+        return fs.existsSync(f + "/servers.json");
+    });
+}
+
+function getServersConfig(server) {
+    return JSON.parse(JSON.minify(fs.readFileSync(server + "/servers.json", "utf8")));
+}
+
+function extractVersions(config) {
+    if (opts.options.version) {
+        return _.filter(config.versions, function (version) {
+            return _.contains(opts.options.version,version);
+        });
+    } else {
+        return config.versions;
     }
 }
