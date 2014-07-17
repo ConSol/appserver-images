@@ -1,14 +1,14 @@
 # Docker Appserver Images
 
-This repository holds Docker builds for various Java application servers with various versions. 
+This project holds Docker builds for various Java application servers with various versions. 
 These images are all setup to work nicely with the [docker-maven-plugin](https://github.com/rhuss/docker-maven-plugin).
-I.e. all `*.war` or `*.ear` artefacts found in `/maven` (which can be linked in externally) get automatically deployed
+I.e. all `*.war` or `*.ear` artifacts found in `/maven` (which can be linked in externally) get automatically deployed
 during startup.
 
 A node.js application `docker-appserver.js` is included for regenerating Dockerfiles and helper scripts from templates (in 
 order to avoid duplication for various, similar versions).
 
-Also, with the option `--build` all images can be build locally on the Dockehost. Use the other command line options
+Also, with the option `--build` all images can be build locally on the Dockerhost. Use the other command line options
 for either restricting to a certain server/version or to specify the connection parameters to the Docker daemon 
 (by default the environment variable `DOCKER_HOST` is evaluated)
  
