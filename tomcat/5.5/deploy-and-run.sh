@@ -9,5 +9,5 @@ if [ -d $DIR ]; then
   done
 fi
 # Use faster (though more unsecure) random number generator
-export CATALINA_OPTS="-Djava.security.egd=file:/dev/./urandom"
+export CATALINA_OPTS="$CATALINA_OPTS -Djava.security.egd=file:/dev/./urandom"
 /opt/tomcat/bin/catalina.sh run

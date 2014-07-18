@@ -4,76 +4,92 @@ var dot = require('dot');
 dot.templateSettings.strip = false;
 
 var fs = require('fs');
-var fstream = require("fstream");
 require('colors');
 var _ = require('underscore');
 var Docker = require('dockerode');
 var tarCmd = "tar";
 var child = require('child_process');
 var stream = require('stream');
-var finish = require('finish');
 
 JSON.minify = JSON.minify || require("node-json-minify");
 
-var opts = parseOpts();
+(function() {
+    var opts = parseOpts();
 
+    // All supported servers which must be present as a sub-directory
+    var servers = getServers(opts);
 
-//console.info(opts);
+    // Create build files
+    createAutomatedBuilds(servers, opts);
 
-// All supported servers which must be present as a sub-directory
-var servers = getServers(opts);
-
-var globalConfig = {};
-if (fs.existsSync("config.json")) {
-    globalConfig = JSON.parse(JSON.minify(fs.readFileSync("config.json", "utf8")));
-}
-
-console.log("Creating Automated Builds\n=========================\n");
-
-servers.forEach(function(server) {
-    console.log(server.cyan);
-    var config =
-        _.extend({},
-            globalConfig,
-            getServersConfig(server));
-    var versions = extractVersions(config);
-    execWithTemplates(server,function(templates) {
-        versions.forEach(function (version) {
-            console.log("    " + version.green);
-            ensureDir(__dirname + "/" + server + "/" + version);
-            var changed = false;
-            templates.forEach(function (template) {
-                var file = checkForMapping(config,version,template.file);
-                if (!file) {
-                    // Skip any file flagged as being mapped but no mapping was found
-                    return;
-                }
-                var templateHasChanged =
-                    fillTemplate(
-                        server + "/" + version + "/" + file,
-                        template.templ,
-                        _.extend(
-                            {},
-                            config,
-                            { "version": version,
-                              "config": _.extend({},config.meta['default'],config.meta[version])}
-                        ));
-                changed = changed || templateHasChanged;
-            });
-            if (!changed) {
-                console.log("       UNCHANGED".yellow);
-            } else {
-
-            }
-        });
-    });
-});
-
-if (opts.options.build) {
-    buildImages(opts);
-}
+    // If desired create Docker images
+    if (opts.options.build) {
+        buildImages(servers, opts);
+    }
+})();
 
 // ===============================================================================
+
+function createAutomatedBuilds(servers, opts) {
+    console.log("Creating Automated Builds\n".cyan);
+
+    var globalConfig = {};
+    if (fs.existsSync("config.json")) {
+        globalConfig = JSON.parse(JSON.minify(fs.readFileSync("config.json", "utf8")));
+    }
+    servers.forEach(function (server) {
+        console.log(server.magenta);
+        var config =
+            _.extend({},
+                globalConfig,
+                getServersConfig(server));
+        var versions = extractVersions(config,opts.options.version);
+        execWithTemplates(server, function (templates) {
+            versions.forEach(function (version) {
+                console.log("    " + version.green);
+                ensureDir(__dirname + "/" + server + "/" + version);
+                var changed = false;
+                templates.forEach(function (template) {
+                    var file = checkForMapping(config, version, template.file);
+                    if (!file) {
+                        // Skip any file flagged as being mapped but no mapping was found
+                        return;
+                    }
+                    var templateHasChanged =
+                        fillTemplate(
+                                server + "/" + version + "/" + file,
+                            template.templ,
+                            _.extend(
+                                {},
+                                config,
+                                { "version":  version,
+                                    "config": _.extend({}, config.meta['default'], config.meta[version])}
+                            ));
+                    changed = changed || templateHasChanged;
+                });
+                if (!changed) {
+                    console.log("       UNCHANGED".yellow);
+                } else {
+
+                }
+            });
+        });
+    });
+}
+
+function buildImages(servers,opts) {
+    console.log("\n\nBuilding Images\n".cyan);
+
+    var docker = new Docker(getDockerConnectionsParams(opts));
+
+    servers.forEach(function(server) {
+        console.log(server.magenta);
+        var versions = extractVersions(getServersConfig(server),opts.options.version);
+        doBuildImages(docker,server,versions);
+    });
+}
+
+// ===================================================================================
 
 function checkForMapping(config,version,file) {
     if (/^__.*$/.test(file)) {
@@ -126,35 +142,6 @@ function ensureDir(dir) {
     }
 }
 
-function parseOpts() {
-    var Getopt = require('node-getopt');
-    var getopt = new Getopt([
-        ['s' , 'server=ARG+', 'Servers for which to create container images (e.g. "tomcat")'],
-        ['v' , 'version=ARG+', 'Versions of a given server to create (e.g. "7.0" for tomcat)'],
-        ['b' , 'build', 'Build image(s)'],
-        ['d' , 'host', 'Docker hostname (default: localhost)'],
-        ['p' , 'port', 'Docker port (default: 2375)'],
-        ['h' , 'help', 'display this help']
-    ]);
-
-    var help =
-        "Usage: node docker-appserver.js [OPTION]\n" +
-        "Generator for automated Docker builds.\n" +
-        "\n" +
-        "[[OPTIONS]]\n" +
-        "\n" +
-        "This script creates so called 'automated builds' for Java application server\n" +
-        "which can be registered at hub.docker.io\n\n" +
-        "It uses templates for covering multiple version of appserver.\n\n" +
-        "Supported servers:\n\n";
-    var servers = getAllServers();
-    servers.forEach(function (server) {
-        var config = getServersConfig(server);
-        help += "   " + server  + ": " + config.versions.join(", ") + "\n";
-    });
-
-    return getopt.bindHelp(help).parseSystem();
-}
 
 function getServers(opts) {
     if (opts.options.server) {
@@ -176,27 +163,14 @@ function getServersConfig(server) {
     return JSON.parse(JSON.minify(fs.readFileSync(__dirname + "/" + server + "/servers.json", "utf8")));
 }
 
-function extractVersions(config) {
-    if (opts.options.version) {
+function extractVersions(config,versionsFromOpts) {
+    if (versionsFromOpts) {
         return _.filter(config.versions, function (version) {
-            return _.contains(opts.options.version,version);
+            return _.contains(versionsFromOpts,version);
         });
     } else {
         return config.versions;
     }
-}
-
-function buildImages(opts) {
-    console.log("\n\nBuilding Images\n===============\n");
-
-    var docker = new Docker(getDockerConnectionsParams(opts));
-
-    var servers = getServers(opts);
-    servers.forEach(function(server) {
-        console.log(server.cyan);
-        var versions = extractVersions(getServersConfig(server));
-        doBuildImages(docker,server,versions);
-    });
 }
 
 function getFullVersion(server,version) {
@@ -268,6 +242,36 @@ function getDockerConnectionsParams(opts) {
             "port" : 2375
         };
     }
-
 }
+
+function parseOpts() {
+    var Getopt = require('node-getopt');
+    var getopt = new Getopt([
+        ['s' , 'server=ARG+', 'Servers for which to create container images (e.g. "tomcat")'],
+        ['v' , 'version=ARG+', 'Versions of a given server to create (e.g. "7.0" for tomcat)'],
+        ['b' , 'build', 'Build image(s)'],
+        ['d' , 'host', 'Docker hostname (default: localhost)'],
+        ['p' , 'port', 'Docker port (default: 2375)'],
+        ['h' , 'help', 'display this help']
+    ]);
+
+    var help =
+        "Usage: node docker-appserver.js [OPTION]\n" +
+        "Generator for automated Docker builds.\n" +
+        "\n" +
+        "[[OPTIONS]]\n" +
+        "\n" +
+        "This script creates so called 'automated builds' for Java application server\n" +
+        "which can be registered at hub.docker.io\n\n" +
+        "It uses templates for covering multiple version of appserver.\n\n" +
+        "Supported servers:\n\n";
+    var servers = getAllServers();
+    servers.forEach(function (server) {
+        var config = getServersConfig(server);
+        help += "   " + server  + ": " + config.versions.join(", ") + "\n";
+    });
+
+    return getopt.bindHelp(help).parseSystem();
+}
+
 
