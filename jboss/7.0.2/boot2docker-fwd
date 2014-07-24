@@ -1,0 +1,150 @@
+#!/bin/bash
+
+usage ()
+{  
+ cat <<UsageHERE
+boot2docker-fwd -- Helper function to quickly manage port forwards between the boot2docker-vm and the host
+Usage: boot2docker-fwd [ -n RULE_NAME ] [ -h HOST_PORT ] [ -p {tcp|udp} ] [ -i HOST_IP ] GUEST_PORT
+ or   boot2docker-fwd -d RULE_NAME
+ or   boot2docker-fwd -l
+ or   boot2docker-fwd -A
+ or   boot2docker-fwd -D
+
+Options:
+-n           Use RULE_NAME as the name for the rule -- Defaults to "tcp<GUEST_PORT>" or "udp<GUEST_PORT>"
+-h           Forward HOST_PORT to the guest -- Defaults to the same number as GUEST_PORT
+-p           Forward tcp or udp traffic to GUEST_PORT -- Defaults to "tcp"
+-i           Bind the port forward to HOST_IP -- Defaults to the local only loopback, "127.0.0.1"
+-d           Delete the rule named RULE_NAME from the boot2docker-vm port forwards.
+-l           List the current port forwards defined for boot2docker-vm
+-A           Create forward rules for all the ports that docker uses by default with the -P option (49000-49900)
+-D           Delete all custom rules (i.e. everything except the "docker" and "ssh" rules)
+GUEST_PORT   The listening port inside boot2docker that will receive connections forwarded by the host
+
+Examples:
+boot2docker-fwd 8000
+Rule tcp8000: tcp port 8000 on host IP 127.0.0.1 forwarded to guest port 8000
+
+boot2docker-fwd -n fubar -h 8888 8000
+Rule fubar: tcp port 8888 on host IP 127.0.0.1 forwarded to guest port 8000
+
+boot2docker-fwd -d fubar
+Rule fubar deleted
+
+Notes:
+Please don't delete the built in "docker" and "ssh" rules.  Things will break.
+UsageHERE
+}
+
+list_rules_matching ()
+{
+   VBoxManage showvminfo boot2docker-vm | grep "NIC [0-9]* Rule([0-9]*): *name = $1"
+}
+
+if [ $# -eq 0 ]
+then
+ usage
+ exit 1
+fi
+
+HOST_IP=127.0.0.1
+PROTOCOL=tcp
+
+while getopts "n:h:p:i:d:lAD" opt
+do
+   case $opt in
+       n)
+           RULE_NAME="$OPTARG"
+           ;;
+       h)
+           if [ "$OPTARG" -eq "$OPTARG" ] 2>/dev/null
+           then
+               HOST_PORT=$OPTARG
+           else
+               usage
+               exit 1
+           fi
+           ;;
+       p)
+           if [ "$OPTARG" = "tcp" -o "$OPTARG" = "udp" ]
+           then
+               PROTOCOL=$OPTARG
+           else
+               usage
+               exit 1
+           fi
+           ;;
+       i)
+           HOST_IP="$OPTARG"
+           ;;
+       d)
+           # Check for a numeric name, prefix the tcp default if so
+           if [ "$OPTARG" -eq "$OPTARG" ] 2>/dev/null
+           then
+               RULE_NAME="tcp$OPTARG"
+           else
+               RULE_NAME="$OPTARG"
+           fi
+           list_rules_matching $RULE_NAME
+           if [ $? -eq 0 ]
+           then
+               VBoxManage controlvm boot2docker-vm natpf1 delete "$RULE_NAME"
+               if [ $? -eq 0 ]
+               then
+                   echo "Rule deleted."
+               else
+                   echo "Rule not deleted!"
+               fi
+           else
+               echo "Rule $RULE_NAME not found."
+           fi
+           exit $?
+           ;;
+       l)
+           list_rules_matching
+           exit 0
+           ;;
+       A)
+           echo "Creating 1802 port forwarding rules.  Please wait..."
+           for i in {49000..49900}; do
+               VBoxManage controlvm boot2docker-vm natpf1 "tcp-port$i,tcp,,$i,,$i"
+               VBoxManage controlvm boot2docker-vm natpf1 "udp-port$i,udp,,$i,,$i"
+           done
+           exit 0
+           ;;
+       D)
+           NUM_RULES=$(VBoxManage showvminfo boot2docker-vm | grep 'NIC [0-9]* Rule([0-9]*): *name = ' | grep -o 'name = [^,]*' | grep -cv ' docker\| ssh')
+           echo "Deleting $NUM_RULES port forwarding rules.  Please wait..."
+           for rule in $(VBoxManage showvminfo boot2docker-vm | grep 'NIC [0-9]* Rule([0-9]*): *name = ' | grep -o 'name = [^,]*' | grep -v ' docker\| ssh' | cut -d ' ' -f 3 )
+           do
+               VBoxManage controlvm boot2docker-vm natpf1 delete "$rule"
+           done
+           exit 0
+           ;;
+   esac
+done
+
+if [ "$1" -eq "$1" ] 2>/dev/null
+then
+   GUEST_PORT=$1
+else
+   usage
+   exit 1
+fi
+
+if [ -z "$RULE_NAME" ]
+then
+   RULE_NAME="${PROTOCOL}${GUEST_PORT}"
+fi
+
+
+VBoxManage controlvm boot2docker-vm natpf1 "$RULE_NAME,$PROTOCOL,$HOST_IP,$HOST_PORT,,$GUEST_PORT"
+if [ $? -eq 0 ]
+then
+   list_rules_matching $RULE_NAME
+   echo "Rule created."
+else
+   echo "Error creating rule!"
+fi
+exit $?
+
