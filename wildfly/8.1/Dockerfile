@@ -7,8 +7,6 @@ EXPOSE 8080
 ENV WILDFLY_VERSION 8.1.0.Final
 ENV DEPLOY_DIR /maven
 
-ENV http_proxy http://proxy.consol.de:8001
-
 RUN wget http://download.jboss.org/wildfly/${WILDFLY_VERSION}/wildfly-${WILDFLY_VERSION}.tar.gz -O /tmp/wildfly.tar.gz
 
 # Unpack
