@@ -95,6 +95,7 @@ function checkForMapping(config,version,file) {
     if (/^__.*$/.test(file)) {
         var mappings = config.mappings || {};
         var mapping = mappings[version] || {};
+        _.extend({},mappings["default"],mappings[version]);
         return mapping[file];
     } else {
         return file;

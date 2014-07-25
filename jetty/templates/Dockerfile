@@ -7,15 +7,16 @@ EXPOSE 8080
 ENV JETTY_VERSION {{= it.config.version }}
 ENV DEPLOY_DIR /maven
 
-RUN wget http://download.eclipse.org/jetty/${JETTY_VERSION}/dist/jetty-distribution-${JETTY_VERSION}.tar.gz -O /tmp/jetty-distribution-${JETTY_VERSION}.tar.gz
+RUN wget {{= it.config.downloadUrl}} -O /tmp/jetty.zip
 
 # Unpack
-RUN tar xzf /tmp/jetty-distribution-${JETTY_VERSION}.tar.gz -C /opt
-RUN ln -s /opt/jetty-distribution-${JETTY_VERSION} /opt/jetty
-RUN rm /tmp/jetty-distribution-${JETTY_VERSION}.tar.gz
+RUN unzip /tmp/jetty.zip -d /opt
+RUN ln -s /opt/{{= it.config.baseName }}-${JETTY_VERSION} /opt/jetty
+RUN rm /tmp/jetty.zip
 
 # Startup script
 ADD deploy-and-run.sh /opt/jetty/bin/
+RUN chmod a+x /opt/jetty/bin/deploy-and-run.sh
 
 ENV JETTY_HOME /opt/jetty
 ENV PATH $PATH:$JETTY_HOME/bin

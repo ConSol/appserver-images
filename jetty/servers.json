@@ -1,7 +1,17 @@
 {
-    "versions" : [ "7", "8", "9" ],
+    "versions" : [ "4", "5", "6", "7", "8", "9" ],
+
+    "mappings" : {
+                "default": { "__deploy-and-run.sh"    : "deploy-and-run.sh" },
+                "5":       { "__deploy-and-run-45.sh" : "deploy-and-run.sh" },
+                "4":       { "__deploy-and-run-45.sh" : "deploy-and-run.sh" }
+    },
 
     "meta": {
+        "default": {
+            "downloadUrl": "http://download.eclipse.org/jetty/${JETTY_VERSION}/dist/jetty-distribution-${JETTY_VERSION}.zip",
+            "baseName": "jetty-distribution"
+        },
         "9": {
             "version": "9.2.1.v20140609"
         },
@@ -10,6 +20,21 @@
         },
         "7": {
             "version": "7.6.15.v20140411"
+        },
+        "6": {
+             "version": "6.1.26",
+             "downloadUrl": "http://dist.codehaus.org/jetty/jetty-${JETTY_VERSION}/jetty-${JETTY_VERSION}.zip",
+             "baseName": "jetty"
+        },
+        "5": {
+             "version": "5.1.12",
+             "downloadUrl": "http://dist.codehaus.org/jetty/jetty-5.1.x/jetty-${JETTY_VERSION}.zip",
+             "baseName": "jetty"
+        },
+        "4": {
+             "version": "4.2.27",
+             "downloadUrl": "http://dist.codehaus.org/jetty/jetty-4.2.x/jetty-${JETTY_VERSION}.zip",
+             "baseName": "jetty"
         }
     }
 }

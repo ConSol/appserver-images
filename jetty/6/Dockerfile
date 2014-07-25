@@ -4,14 +4,14 @@ MAINTAINER deppisch@consol.de
 
 EXPOSE 8080
 
-ENV JETTY_VERSION 9.2.1.v20140609
+ENV JETTY_VERSION 6.1.26
 ENV DEPLOY_DIR /maven
 
-RUN wget http://download.eclipse.org/jetty/${JETTY_VERSION}/dist/jetty-distribution-${JETTY_VERSION}.zip -O /tmp/jetty.zip
+RUN wget http://dist.codehaus.org/jetty/jetty-${JETTY_VERSION}/jetty-${JETTY_VERSION}.zip -O /tmp/jetty.zip
 
 # Unpack
 RUN unzip /tmp/jetty.zip -d /opt
-RUN ln -s /opt/jetty-distribution-${JETTY_VERSION} /opt/jetty
+RUN ln -s /opt/jetty-${JETTY_VERSION} /opt/jetty
 RUN rm /tmp/jetty.zip
 
 # Startup script
