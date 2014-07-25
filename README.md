@@ -40,5 +40,6 @@ It uses templates for covering multiple version of appserver.
 
 Supported servers:
 
+   jetty: 4, 5, 6, 7, 8, 9
    tomcat: 3.3, 4.1, 5.0, 5.5, 6.0, 7.0, 8.0
 ````
