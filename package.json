@@ -1,6 +1,6 @@
 {
     "name": "docker-appserver",
-    "description": "Creating of a suite of Docker images for various application server",
+    "description": "Creating a suite of Docker images containing various application server",
     "version": "0.0.1",
     "private": true,
     "dependencies": {
@@ -9,8 +9,6 @@
         "underscore": "*",
         "node-json-minify": "*",
         "node-getopt" : "*",
-        "dockerode" : "*",
-        "fstream" : "*",
-        "finish" : "*"
+        "dockerode" : "*"
     }
 }
