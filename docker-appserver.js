@@ -123,7 +123,7 @@ function fillTemplate(file,template,config) {
     } else {
         var exists = fs.existsSync(file);
         var oldContent = exists ? fs.readFileSync(file, "utf8") : undefined;
-        if (newContent.trim() !== oldContent.trim()) {
+        if (!oldContent || newContent.trim() !== oldContent.trim()) {
             console.log("       " + label + ": " + (exists ? "CHANGED".green : "NEW".yellow));
             fs.writeFileSync(file,newContent,{ "encoding" : "utf8"});
             return true;
