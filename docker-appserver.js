@@ -33,10 +33,9 @@ JSON.minify = JSON.minify || require("node-json-minify");
 function createAutomatedBuilds(servers, opts) {
     console.log("Creating Automated Builds\n".cyan);
 
-    var globalConfig = {};
-    if (fs.existsSync("config.json")) {
-        globalConfig = JSON.parse(JSON.minify(fs.readFileSync("config.json", "utf8")));
-    }
+    var globalConfig = getConfig("config.json");
+    var fragments = getFragments("fragments.txt");
+
     servers.forEach(function (server) {
         console.log(server.magenta);
         var config =
@@ -62,8 +61,9 @@ function createAutomatedBuilds(servers, opts) {
                             _.extend(
                                 {},
                                 config,
-                                { "version":  version,
-                                    "config": _.extend({}, config.meta['default'], config.meta[version])}
+                                {    "version": version,
+                                   "fragments": fragments,
+                                      "config": _.extend({}, config.meta['default'], config.meta[version])}
                             ));
                     changed = changed || templateHasChanged;
                 });
@@ -76,6 +76,41 @@ function createAutomatedBuilds(servers, opts) {
         });
     });
 }
+
+function getConfig(path) {
+    var config = {};
+    if (fs.existsSync(path)) {
+        config = JSON.parse(JSON.minify(fs.readFileSync(path, "utf8")));
+    }
+    return config;
+}
+
+function getFragments(path) {
+    var fragments = {};
+    if (fs.existsSync(path)) {
+        var text = fs.readFileSync(path, "utf8");
+        var lines = text.split(/\r?\n/);
+        var fragment = undefined;
+        var buffer = "";
+        lines.forEach(function (line) {
+            var name = line.match(/^===*\s*([^\s]+)?/);
+            if (name) {
+                if (!name[1]) { // end-of-fragment
+                    fragments[fragment] = buffer;
+                    buffer = "";
+                }
+                fragment = name[1];
+            } else {
+                if (fragment) {
+                    buffer += line + "\n";
+                }
+            }
+        });
+    }
+    return fragments;
+}
+
+
 
 function buildImages(servers,opts) {
     console.log("\n\nBuilding Images\n".cyan);

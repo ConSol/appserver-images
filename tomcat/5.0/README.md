@@ -4,13 +4,14 @@ A simple docker build for installing a vanilla Tomcat 5.0 below
 */opt/tomcat*. It comes out of the box and is intended for use for
 integration testing.
 
-During startup a directory specified by the environment variable `DEPLOY_DIR` 
-(/maven by default) is checked for .war files. If there 
-are any, they are linked into Jetty's webapps/ directory for automatic
-deployment. This plays nicely with the Docker maven plugin from 
+During startup a directory specified by the environment variable `DEPLOY_DIR`
+(*/maven* by default) is checked for .war files. If there
+are any, they are linked into Jetty's *webapps/* directory for automatic
+deployment. This plays nicely with the Docker maven plugin from
 https://github.com/rhuss/docker-maven-plugin/ and its 'assembly' mode which
 can automatically create Docker data container with Maven artifacts
-exported from a directory "/maven".
+exposed from a directory */maven*
+
 
 Features:
 
