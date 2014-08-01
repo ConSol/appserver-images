@@ -1,6 +1,6 @@
-FROM dockerfile/java
+FROM {{= it.javaBaseImage }}
 
-MAINTAINER deppisch@consol.de
+MAINTAINER {{= it.maintainer }}
 
 EXPOSE 8080
 
