@@ -11,6 +11,10 @@ var tarCmd = "tar";
 var child = require('child_process');
 var stream = require('stream');
 
+
+// Set to true for extra debugging
+var DEBUG = false;
+
 JSON.minify = JSON.minify || require("node-json-minify");
 
 (function() {
@@ -243,11 +247,13 @@ function getResponseStream() {
     var buildResponseStream = new stream.Writable();
     buildResponseStream._write = function (chunk, encoding, done) {
         var resp = JSON.parse(chunk.toString());
+
+        debug("|| >>> " + chunk.toString());
         if (resp.stream) {
             process.stdout.write(resp.stream);
         }
         if (resp.errorDetail) {
-            process.stderr.write(resp.stream);
+            process.stderr.write(resp.errorDetail);
         }
         done();
     };
@@ -279,6 +285,13 @@ function getDockerConnectionsParams(opts) {
         };
     }
 }
+
+function debug(msg) {
+    if (DEBUG) {
+        process.stdout.write(msg + "\n");
+    }
+}
+
 
 function parseOpts() {
     var Getopt = require('node-getopt');
