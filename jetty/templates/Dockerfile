@@ -10,7 +10,7 @@ ENV DEPLOY_DIR /maven
 RUN wget {{= it.config.downloadUrl}} -O /tmp/jetty.zip
 
 # Unpack
-RUN unzip /tmp/jetty.zip -d /opt
+RUN cd /opt && jar xf /tmp/jetty.zip
 RUN ln -s /opt/{{= it.config.baseName }}-${JETTY_VERSION} /opt/jetty
 RUN rm /tmp/jetty.zip
 

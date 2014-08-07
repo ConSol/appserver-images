@@ -10,7 +10,7 @@ ENV DEPLOY_DIR /maven
 RUN wget http://dist.codehaus.org/jetty/jetty-${JETTY_VERSION}/jetty-${JETTY_VERSION}.zip -O /tmp/jetty.zip
 
 # Unpack
-RUN unzip /tmp/jetty.zip -d /opt
+RUN cd /opt && jar xf /tmp/jetty.zip
 RUN ln -s /opt/jetty-${JETTY_VERSION} /opt/jetty
 RUN rm /tmp/jetty.zip
 

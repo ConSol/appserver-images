@@ -8,5 +8,5 @@ if [ -d $DIR ]; then
      ln -s $i /opt/jetty/webapps/$file
   done
 fi
-cd /opt/jetty
-java -Djava.security.egd=file:/dev/./urandom -jar ./start.jar
+export JAVA_OPTIONS="$JAVA_OPTIONS -Djava.security.egd=file:/dev/./urandom"
+sh /opt/jetty/bin/jetty.sh run

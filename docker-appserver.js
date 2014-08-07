@@ -133,8 +133,7 @@ function buildImages(servers,opts) {
 function checkForMapping(config,version,file) {
     if (/^__.*$/.test(file)) {
         var mappings = config.mappings || {};
-        var mapping = mappings[version] || {};
-        _.extend({},mappings["default"],mappings[version]);
+        var mapping = _.extend({},mappings["default"],mappings[version]);
         return mapping[file];
     } else {
         return file;
@@ -246,14 +245,16 @@ function doBuildImages(docker,server,versions) {
 function getResponseStream() {
     var buildResponseStream = new stream.Writable();
     buildResponseStream._write = function (chunk, encoding, done) {
-        var resp = JSON.parse(chunk.toString());
+        var answer = chunk.toString();
+        var resp = JSON.parse(answer);
 
-        debug("|| >>> " + chunk.toString());
+        debug("|| >>> " + answer);
         if (resp.stream) {
             process.stdout.write(resp.stream);
         }
         if (resp.errorDetail) {
-            process.stderr.write(resp.errorDetail);
+            process.stderr.write("++++++++ ERROR +++++++++++\n");
+            process.stderr.write(resp.errorDetail.message);
         }
         done();
     };
