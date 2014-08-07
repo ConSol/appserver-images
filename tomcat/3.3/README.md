@@ -16,7 +16,7 @@ exposed from a directory */maven*
 Features:
 
 * Tomcat Version: **3.3.2**
-* Java Version: **Oracle 1.7.0_51-b13** (base image: *dockerfile/java*)
+* Java Version: **OpenJDK 1.7.0_60 (7u60-2.5.0-2)** (base image: *java*)
 * Port: **8080**
 * User **admin** (Password: **admin**) has been added to access the admin
   applications */host-manager* and */manager*)

@@ -1,12 +1,12 @@
 {
     // Overall base image
-    "javaBaseImage" : "dockerfile/java",
+    "javaBaseImage" : "java",
 
     // Path to Java-Home within this image
-    "javaHome" : "/usr/lib/jvm/java-7-oracle",
+    "javaHome" : "/usr/lib/jvm/java-7-openjdk-amd64",
 
     // Java version contained in base image
-    "javaVersion": "Oracle 1.7.0_51-b13",
+    "javaVersion": "OpenJDK 1.7.0_60 (7u60-2.5.0-2)",
 
     // Maintainer
     "maintainer" : "roland@jolokia.org"

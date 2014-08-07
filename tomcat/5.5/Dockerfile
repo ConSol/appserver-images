@@ -1,4 +1,4 @@
-FROM dockerfile/java
+FROM java
 
 MAINTAINER roland@jolokia.org
 
@@ -7,7 +7,7 @@ EXPOSE 8080
 ENV TOMCAT_VERSION 5.5.36
 ENV DEPLOY_DIR /maven
 
-ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
+ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 
 
 RUN wget http://archive.apache.org/dist/tomcat/tomcat-5/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz -O /tmp/catalina.tar.gz

@@ -16,7 +16,7 @@ exposed from a directory */maven*
 Features:
 
 * Jetty Version: **4.2.27**
-* Java Version: **Oracle 1.7.0_51-b13** (base image: *dockerfile/java*)
+* Java Version: **OpenJDK 1.7.0_60 (7u60-2.5.0-2)** (base image: *java*)
 * Port: **8080**
 * Command: `/opt/jetty/bin/deploy-and-run.sh` which links .war files from */maven* to 
   */opt/jetty/webapps* and then calls `/opt/jetty/bin/jetty.sh run`
