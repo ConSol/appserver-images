@@ -1,5 +1,5 @@
 FROM java
-# Test
+
 MAINTAINER roland@jolokia.org
 
 EXPOSE 8080

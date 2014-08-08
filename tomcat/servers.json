@@ -2,24 +2,15 @@
     // All supported versions
     "versions" : [ "3.3", "4.1", "5.0", "5.5", "6.0", "7.0", "8.0" ],
 
-    "mappings" : {
-                "3.3": { "__tomcat-users-v2.xml" : "admin-users.xml" },
-                "4.1": { "__tomcat-users-v2.xml" : "tomcat-users.xml" },
-                "5.0": { "__tomcat-users-v2.xml" : "tomcat-users.xml" },
-                "5.5": { "__tomcat-users-v3.xml" : "tomcat-users.xml" },
-                "6.0": { "__tomcat-users-v3.xml" : "tomcat-users.xml" },
-                "7.0": { "__tomcat-users-v3.xml" : "tomcat-users.xml" },
-                "8.0": { "__tomcat-users-v3.xml" : "tomcat-users.xml" }
-    },
-
-    "meta": {
+    "config": {
         "default": {
             "base" : "apache-tomcat",
             "useJavaHome" : false,
             "roleFile" : { "file" : "tomcat-users.xml", "dir" : ""},
             "optsVar" : "CATALINA_OPTS",
             "runCmd" : "catalina.sh",
-            "toRemove" : []
+            "toRemove" : [],
+            "mappings": { "__tomcat-users-v3.xml" : "tomcat-users.xml" }
         },
         "3.3": {
             "version": "3.3.2",
@@ -29,18 +20,21 @@
             "useJavaHome": true,
             "roleFile": { "file": "admin-users.xml", "dir" : "users/" },
             "optsVar": "TOMCAT_OPTS",
-            "runCmd" : "tomcat"
+            "runCmd" : "tomcat",
+            "mappings" : { "__tomcat-users-v2.xml" : "admin-users.xml" }
         },
         "4.1": {
             "version": "4.1.40",
             "toRemove": [ "jsp-examples",  "servlets-examples", "tomcat-docs", "webdav" ],
-            "useJavaHome": true
+            "useJavaHome": true,
+            "mappings" : { "__tomcat-users-v2.xml" : "tomcat-users.xml" }
         },
         "5.0": {
             "version": "5.0.30",
             "base": "jakarta-tomcat",
             "useJavaHome": true,
-            "toRemove": [ "jsp-examples",  "servlets-examples", "tomcat-docs", "webdav" ]
+            "toRemove": [ "jsp-examples",  "servlets-examples", "tomcat-docs", "webdav" ],
+            "mappings" : { "__tomcat-users-v2.xml" : "tomcat-users.xml" }
         },
         "5.5": {
             "version": "5.5.36",

@@ -67,7 +67,7 @@ function createAutomatedBuilds(servers, opts) {
                                 config,
                                 {    "version": version,
                                    "fragments": fragments,
-                                      "config": _.extend({}, config.meta['default'], config.meta[version])}
+                                      "config": _.extend({}, config.config['default'], config.config[version])}
                             ));
                     changed = changed || templateHasChanged;
                 });
@@ -132,9 +132,14 @@ function buildImages(servers,opts) {
 
 function checkForMapping(config,version,file) {
     if (/^__.*$/.test(file)) {
-        var mappings = config.mappings || {};
-        var mapping = _.extend({},mappings["default"],mappings[version]);
-        return mapping[file];
+        var mappings = config.config[version].mappings;
+        if (!mappings) {
+            mappings = config.config["default"].mappings;
+        }
+        if (!mappings) {
+            return null;
+        }
+        return mappings[file];
     } else {
         return file;
     }
@@ -214,7 +219,7 @@ function extractVersions(config,versionsFromOpts) {
 
 function getFullVersion(server,version) {
     var config = getServersConfig(server);
-    return config.meta[version].version;
+    return config.config[version].version;
 }
 
 function doBuildImages(docker,server,versions) {
