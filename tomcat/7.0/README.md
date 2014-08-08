@@ -15,7 +15,7 @@ exposed from a directory */maven*
 
 Features:
 
-* Tomcat Version: **7.0.54**
+* Tomcat Version: **7.0.55**
 * Java Version: **OpenJDK 1.7.0_60 (7u60-2.5.0-2)** (base image: *java*)
 * Port: **8080**
 * User **admin** (Password: **admin**) has been added to access the admin

@@ -8,7 +8,7 @@
             "mappings": { "__deploy-and-run.sh"    : "deploy-and-run.sh"  }
         },
         "9": {
-            "version": "9.2.1.v20140609"
+            "version": "9.2.2.v20140723"
         },
         "8": {
             "version": "8.1.15.v20140411"

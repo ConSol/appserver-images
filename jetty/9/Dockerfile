@@ -4,7 +4,7 @@ MAINTAINER roland@jolokia.org
 
 EXPOSE 8080
 
-ENV JETTY_VERSION 9.2.1.v20140609
+ENV JETTY_VERSION 9.2.2.v20140723
 ENV DEPLOY_DIR /maven
 
 RUN wget http://download.eclipse.org/jetty/${JETTY_VERSION}/dist/jetty-distribution-${JETTY_VERSION}.zip -O /tmp/jetty.zip

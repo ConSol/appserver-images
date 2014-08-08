@@ -46,7 +46,7 @@
             "toRemove": [ "examples", "docs" ]
         },
         "7.0": {
-            "version": "7.0.54",
+            "version": "7.0.55",
             "toRemove": [ "examples", "docs" ]
         },
         "8.0": {
