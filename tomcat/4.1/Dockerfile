@@ -23,11 +23,15 @@ ADD tomcat-users.xml /opt/apache-tomcat-${TOMCAT_VERSION}/conf/
 # Startup script
 ADD deploy-and-run.sh /opt/apache-tomcat-${TOMCAT_VERSION}/bin/
 
+# jolokia agent
+RUN wget http://central.maven.org/maven2/org/jolokia/jolokia-jvm/1.2.2/jolokia-jvm-1.2.2-agent.jar -O /opt/tomcat/jolokia-agent.jar
+
 # Remove unneeded apps
 RUN rm -rf /opt/tomcat/webapps/jsp-examples /opt/tomcat/webapps/servlets-examples /opt/tomcat/webapps/tomcat-docs /opt/tomcat/webapps/webdav 
 
 # VOLUME ["/opt/tomcat/logs", "/opt/tomcat/work", "/opt/tomcat/temp", "/tmp/hsperfdata_root"
 
+ENV CATALINA_OPTS -javaagent:/opt/tomcat/jolokia-agent.jar=host=0.0.0.0,port=8778,agentId=cheese
 ENV CATALINA_HOME /opt/tomcat
 ENV PATH $PATH:$CATALINA_HOME/bin
 
