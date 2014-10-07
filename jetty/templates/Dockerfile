@@ -2,7 +2,7 @@ FROM {{= it.javaBaseImage }}
 
 MAINTAINER {{= it.maintainer }}
 
-EXPOSE 8080
+EXPOSE 8080 8778
 
 ENV JETTY_VERSION {{= it.config.version }}
 ENV DEPLOY_DIR /maven
