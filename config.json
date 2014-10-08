@@ -2,6 +2,9 @@
     // Overall base image
     "javaBaseImage" : "java",
 
+    // Jolokia-Java base image
+    "javaJolokiaBaseImage" : "consol/java-jolokia",
+
     // Path to Java-Home within this image
     "javaHome" : "/usr/lib/jvm/java-7-openjdk-amd64",
 

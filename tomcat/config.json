@@ -1,10 +1,12 @@
 {
-    // All supported versions
     "versions" : [ "3.3", "4.1", "5.0", "5.5", "6.0", "7.0", "8.0" ],
+
+    "buildVersion" : 2,
 
     "config": {
         "default": {
             "base" : "apache-tomcat",
+            "jolokiaVersion" : "1.2.2",
             "useJavaHome" : false,
             "roleFile" : { "file" : "tomcat-users.xml", "dir" : ""},
             "optsVar" : "CATALINA_OPTS",

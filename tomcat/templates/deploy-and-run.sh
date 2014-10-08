@@ -8,6 +8,10 @@ if [ -d $DIR ]; then
      ln -s $i /opt/tomcat/webapps/$file
   done
 fi
+
+# Setup Jolokia
+. /opt/jolokia/jolokia_env.sh
+
 # Use faster (though more unsecure) random number generator
-export {{= it.config.optsVar}}="${{= it.config.optsVar}} -Djava.security.egd=file:/dev/./urandom"
+export {{= it.config.optsVar}}="${{= it.config.optsVar}} ${JOLOKIA_OPTS} -Djava.security.egd=file:/dev/./urandom"
 /opt/tomcat/bin/{{= it.config.runCmd}} run

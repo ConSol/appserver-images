@@ -1,8 +1,8 @@
-FROM java
+FROM consol/java-jolokia
 
 MAINTAINER roland@jolokia.org
 
-EXPOSE 8080
+EXPOSE 8080 8778
 
 ENV JETTY_VERSION 5.1.12
 ENV DEPLOY_DIR /maven

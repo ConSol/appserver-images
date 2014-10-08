@@ -11,25 +11,32 @@ var tarCmd = "tar";
 var child = require('child_process');
 var stream = require('stream');
 
-
 // Set to true for extra debugging
 var DEBUG = false;
+var JOLOKIA_BASE_IMAGE = "java-jolokia";
 
 JSON.minify = JSON.minify || require("node-json-minify");
 
-(function() {
-    var opts = parseOpts();
-
-    // All supported servers which must be present as a sub-directory
-    var servers = getServers(opts);
-
-    // Create build files
+function processServers(servers, opts) {
+// Create build files
     createAutomatedBuilds(servers, opts);
 
     // If desired create Docker images
     if (opts.options.build) {
         buildImages(servers, opts);
     }
+}
+(function() {
+    var opts = parseOpts();
+
+    if (opts.options.jolokia) {
+        processServers([JOLOKIA_BASE_IMAGE],opts);
+        return;
+    }
+
+    // All supported servers which must be present as a sub-directory
+    var servers = getServers(opts);
+    processServers(servers, opts)
 })();
 
 // ===============================================================================
@@ -124,7 +131,7 @@ function buildImages(servers,opts) {
     servers.forEach(function(server) {
         console.log(server.magenta);
         var versions = extractVersions(getServersConfig(server),opts.options.version);
-        doBuildImages(docker,server,versions);
+        doBuildImages(docker,server,versions,opts.options.nocache);
     });
 }
 
@@ -145,8 +152,8 @@ function checkForMapping(config,version,file) {
     }
 }
 
-function execWithTemplates(server,templFunc) {
-    var templ_dir = server + "/templates";
+function execWithTemplates(dir,templFunc) {
+    var templ_dir = dir + "/templates";
     var templates = fs.readdirSync(templ_dir);
     var ret = [];
     templates.forEach(function (template) {
@@ -189,7 +196,7 @@ function ensureDir(dir) {
 
 function getServers(opts) {
     if (opts.options.server) {
-        return _.filter(getAllServers(), function (server) {
+        return _.filter(getAllServers(), function(server) {
             return _.contains(opts.options.server,server);
         });
     } else {
@@ -199,12 +206,12 @@ function getServers(opts) {
 
 function getAllServers() {
     return _.filter(fs.readdirSync(__dirname), function (f) {
-        return fs.existsSync(f + "/servers.json");
+        return fs.existsSync(f + "/config.json") && f !== JOLOKIA_BASE_IMAGE;
     });
 }
 
 function getServersConfig(server) {
-    return JSON.parse(JSON.minify(fs.readFileSync(__dirname + "/" + server + "/servers.json", "utf8")));
+    return JSON.parse(JSON.minify(fs.readFileSync(__dirname + "/" + server + "/config.json", "utf8")));
 }
 
 function extractVersions(config,versionsFromOpts) {
@@ -219,18 +226,19 @@ function extractVersions(config,versionsFromOpts) {
 
 function getFullVersion(server,version) {
     var config = getServersConfig(server);
-    return config.config[version].version;
+    var buildVersion = config.buildVersion;
+    return config.config[version].version + (buildVersion ? "-" + buildVersion : "");
 }
 
-function doBuildImages(docker,server,versions) {
+function doBuildImages(docker,server,versions,nocache) {
     if (versions.length > 0) {
         var version = versions.shift();
         console.log("    " + version.green);
         var tar = child.spawn(tarCmd, ['-c', '.'], { cwd: __dirname + "/" + server + "/" + version });
-        var name = "consol/" + server + "-" + version;
+        var name = "consol/" + server + (version !== "0" ? "-" + version : "");
         var fullName = name + ":" + getFullVersion(server,version);
         docker.buildImage(
-            tar.stdout, { "t": fullName, "forcerm": true, "q": true },
+            tar.stdout, { "t": fullName, "forcerm": true, "q": true, "nocache": nocache ? "true" : "false" },
             function (error, stream) {
                 if (error) {
                     throw error;
@@ -241,7 +249,7 @@ function doBuildImages(docker,server,versions) {
                         if (error) { throw error; }
                         console.log(result);
                     });
-                    doBuildImages(docker,server,versions);
+                    doBuildImages(docker,server,versions,nocache);
                 });
             });
     }
@@ -302,11 +310,13 @@ function debug(msg) {
 function parseOpts() {
     var Getopt = require('node-getopt');
     var getopt = new Getopt([
+        ['j' , 'jolokia', 'Build  java-jolokia only' ],
         ['s' , 'server=ARG+', 'Servers for which to create container images (e.g. "tomcat")'],
         ['v' , 'version=ARG+', 'Versions of a given server to create (e.g. "7.0" for tomcat)'],
         ['b' , 'build', 'Build image(s)'],
         ['d' , 'host', 'Docker hostname (default: localhost)'],
         ['p' , 'port', 'Docker port (default: 2375)'],
+        ['n' , 'nocache', 'Dont cache when building images'],
         ['h' , 'help', 'display this help']
     ]);
 
