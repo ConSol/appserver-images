@@ -1,4 +1,4 @@
-FROM java
+FROM java:7u60
 
 MAINTAINER roland@jolokia.org
 

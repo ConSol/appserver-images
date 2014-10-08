@@ -1,6 +1,6 @@
 {
     // Overall base image
-    "javaBaseImage" : "java",
+    "javaBaseImage" : "java:7u60",
 
     // Jolokia-Java base image
     "javaJolokiaBaseImage" : "consol/java-jolokia",
