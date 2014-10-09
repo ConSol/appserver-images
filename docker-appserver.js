@@ -65,6 +65,7 @@ function createAutomatedBuilds(servers, opts) {
                         // Skip any file flagged as being mapped but no mapping was found
                         return;
                     }
+                    var filledFragments = fillFragments(fragments,config);
                     var templateHasChanged =
                         fillTemplate(
                                 server + "/" + version + "/" + file,
@@ -72,9 +73,11 @@ function createAutomatedBuilds(servers, opts) {
                             _.extend(
                                 {},
                                 config,
-                                {    "version": version,
-                                   "fragments": fragments,
-                                      "config": _.extend({}, config.config['default'], config.config[version])}
+                                {
+                                    "version": version,
+                                    "fragments": filledFragments,
+                                    "config": _.extend({}, config.config['default'], config.config[version])
+                                }
                             ));
                     changed = changed || templateHasChanged;
                 });
@@ -121,7 +124,16 @@ function getFragments(path) {
     return fragments;
 }
 
-
+function fillFragments(fragments,config) {
+    var ret = { };
+    for (var key in fragments) {
+        if (fragments.hasOwnProperty(key)) {
+            var template = dot.template(fragments[key]);
+            ret[key] = template(config);
+        }
+    }
+    return ret;
+}
 
 function buildImages(servers,opts) {
     console.log("\n\nBuilding Images\n".cyan);
