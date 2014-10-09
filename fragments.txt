@@ -1,4 +1,15 @@
+== readmeJolokiaBaseImage ===================================================
+
+This image will enable a Jolokia agent during startup which can be reached
+by default within the container at port 8778.
+
+The environment variable `$JOLOKIA_DISABLE` can be set to any value so that
+agent won't be started.
+
+More information about can be found in the description of [{{= it.javaJolokiaBaseImage}}](https://registry.hub.docker.com/u/{{= it.javaJolokiaBaseImage}})
+=============================================================================
 == readmeDeploymentInstruction ==============================================
+
 During startup a directory specified by the environment variable `DEPLOY_DIR`
 (*/maven* by default) is checked for .war files. If there
 are any, they are linked into Jetty's *webapps/* directory for automatic

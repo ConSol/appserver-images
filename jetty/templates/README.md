@@ -6,6 +6,8 @@ integration tests
 
 {{= it.fragments.readmeDeploymentInstruction }}
 
+{{= it.fragments.readmeJolokiaBaseImage }}
+
 Features:
 
 * Jetty Version: **{{= it.config.version}}**

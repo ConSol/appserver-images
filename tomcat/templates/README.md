@@ -2,10 +2,11 @@
 
 A simple docker build for installing a vanilla Tomcat {{= it.version}} below
 */opt/tomcat*. It comes out of the box and is intended for use for
-integration testing. A Jolokia agent is installed too and can be customized 
-with the environment variables described for image {{= it.javaJolokiaBaseImage}}
+integration testing.
 
 {{= it.fragments.readmeDeploymentInstruction }}
+
+{{= it.fragments.readmeJolokiaBaseImage }}
 
 Features:
 

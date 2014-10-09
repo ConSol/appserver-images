@@ -2,8 +2,8 @@
 
 A simple docker build for installing a vanilla Tomcat 3.3 below
 */opt/tomcat*. It comes out of the box and is intended for use for
-integration testing. A Jolokia agent is installed too and can be customized 
-with the environment variables described for image consol/java-jolokia
+integration testing.
+
 
 During startup a directory specified by the environment variable `DEPLOY_DIR`
 (*/maven* by default) is checked for .war files. If there
@@ -12,6 +12,16 @@ deployment. This plays nicely with the Docker maven plugin from
 https://github.com/rhuss/docker-maven-plugin/ and its 'assembly' mode which
 can automatically create Docker data container with Maven artifacts
 exposed from a directory */maven*
+
+
+
+This image will enable a Jolokia agent during startup which can be reached
+by default within the container at port 8778.
+
+The environment variable `$JOLOKIA_DISABLE` can be set to any value so that
+agent won't be started.
+
+More information about can be found in the description of [{{= it.javaJolokiaBaseImage}}](https://registry.hub.docker.com/u/{{= it.javaJolokiaBaseImage}})
 
 
 Features:

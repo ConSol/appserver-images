@@ -5,15 +5,14 @@ if [ -n "${JOLOKIA_DISABLE}" ]; then
 else
    JOLOKIA_OPTS="-javaagent:${JOLOKIA_DIR}/jolokia.jar"
    JOLOKIA_CONFIG=${JOLOKIA_CONFIG:-$JOLOKIA_DIR/jolokia.properties}
+   JOLOKIA_HOST=${JOLOKIA_HOST:-*}
    if [ -f "$JOLOKIA_CONFIG" ]; then
       JOLOKIA_ARGS="${JOLOKIA_ARGS},config=${JOLOKIA_CONFIG}"
    fi
    if [ -n "$JOLOKIA_PORT" ]; then
       JOLOKIA_ARGS="${JOLOKIA_ARGS},port=${JOLOKIA_PORT}"
    fi
-   if [ -n "$JOLOKIA_HOST" ]; then
-      JOLOKIA_ARGS="${JOLOKIA_ARGS},host=${JOLOKIA_HOST}"
-   fi
+   JOLOKIA_ARGS="${JOLOKIA_ARGS},host=${JOLOKIA_HOST}"
    if [ -n "$JOLOKIA_USER" ]; then
       JOLOKIA_ARGS="${JOLOKIA_ARGS},user=${JOLOKIA_USER}"
    fi
