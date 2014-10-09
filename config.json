@@ -1,15 +1,11 @@
 {
     // Overall base image
-    "javaBaseImage" : "java:7u60",
-
-    // Jolokia-Java base image
-    "javaJolokiaBaseImage" : "consol/java-jolokia",
-
-    // Path to Java-Home within this image
-    "javaHome" : "/usr/lib/jvm/java-7-openjdk-amd64",
+    "javaJolokiaBaseImage" : "jolokia/java-jolokia:7",
 
     // Java version contained in base image
-    "javaVersion": "OpenJDK 1.7.0_60 (7u60-2.5.0-2)",
+    "javaVersion": "OpenJDK 1.7.0_65 (7u65-2.5.0-2)",
+
+    "javaHome" : "/usr/lib/jvm/java-7-openjdk-amd64",
 
     // Maintainer
     "maintainer" : "roland@jolokia.org"

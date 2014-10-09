@@ -1,4 +1,4 @@
-FROM consol/java-jolokia
+FROM jolokia/java-jolokia:7
 
 MAINTAINER roland@jolokia.org
 
@@ -24,9 +24,6 @@ ADD deploy-and-run.sh /opt/apache-tomcat-${TOMCAT_VERSION}/bin/
 
 # Remove unneeded apps
 RUN rm -rf /opt/tomcat/webapps/balancer /opt/tomcat/webapps/jsp-examples /opt/tomcat/webapps/servlets-examples /opt/tomcat/webapps/tomcat-docs /opt/tomcat/webapps/webdav 
-
-# Get Jolokia agent
-RUN wget http://repo1.maven.org/maven2/org/jolokia/jolokia-jvm/1.2.2/jolokia-jvm-1.2.2-agent.jar -O /opt/tomcat/jolokia-agent.jar
 
 VOLUME ["/opt/tomcat/logs", "/opt/tomcat/work", "/opt/tomcat/temp", "/tmp/hsperfdata_root" ]
 

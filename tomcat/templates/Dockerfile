@@ -35,9 +35,6 @@ ADD deploy-and-run.sh /opt/{{= base}}-${TOMCAT_VERSION}/bin/
 # Remove unneeded apps
 RUN rm -rf {{~toRemove :value:index}}/opt/tomcat/webapps/{{=value}} {{~}}
 
-# Get Jolokia agent
-RUN wget http://repo1.maven.org/maven2/org/jolokia/jolokia-jvm/{{= jolokiaVersion }}/jolokia-jvm-{{= jolokiaVersion }}-agent.jar -O /opt/tomcat/jolokia-agent.jar
-
 VOLUME ["/opt/tomcat/logs", "/opt/tomcat/work", "/opt/tomcat/temp", "/tmp/hsperfdata_root" ]
 
 ENV CATALINA_HOME /opt/tomcat

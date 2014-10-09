@@ -21,13 +21,13 @@ by default within the container at port 8778.
 The environment variable `$JOLOKIA_DISABLE` can be set to any value so that
 agent won't be started.
 
-More information about can be found in the description of [consol/java-jolokia](https://registry.hub.docker.com/u/consol/java-jolokia)
+More information about can be found in the description of jolokia/java-jolokia:7 [jolokia/java-jolokia:7](https://registry.hub.docker.com/u/jolokia/java-jolokia:7)
 
 
 Features:
 
 * Tomcat Version: **5.5.36**
-* Java Version: **OpenJDK 1.7.0_60 (7u60-2.5.0-2)** (base image: *consol/java-jolokia*)
+* Java Version: **OpenJDK 1.7.0_65 (7u65-2.5.0-2)** (base image: *jolokia/java-jolokia:7*)
 * Port: **8080**
 * User **admin** (Password: **admin**) has been added to access the admin
   applications */host-manager* and */manager*)

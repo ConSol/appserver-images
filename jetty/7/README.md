@@ -21,13 +21,13 @@ by default within the container at port 8778.
 The environment variable `$JOLOKIA_DISABLE` can be set to any value so that
 agent won't be started.
 
-More information about can be found in the description of [consol/java-jolokia](https://registry.hub.docker.com/u/consol/java-jolokia)
+More information about can be found in the description of jolokia/java-jolokia:7 [jolokia/java-jolokia:7](https://registry.hub.docker.com/u/jolokia/java-jolokia:7)
 
 
 Features:
 
 * Jetty Version: **7.6.15.v20140411**
-* Java Version: **OpenJDK 1.7.0_60 (7u60-2.5.0-2)** (base image: *java:7u60*)
+* Java Version: **OpenJDK 1.7.0_65 (7u65-2.5.0-2)** (base image: *undefined*)
 * Port: **8080**
 * Command: `/opt/jetty/bin/deploy-and-run.sh` which links .war files from */maven* to 
   */opt/jetty/webapps* and then calls `/opt/jetty/bin/jetty.sh run`

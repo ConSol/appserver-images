@@ -9,9 +9,6 @@ if [ -d $DIR ]; then
   done
 fi
 
-# Setup Jolokia
-. /opt/jolokia/jolokia_env.sh
-
 # Use faster (though more unsecure) random number generator
-export TOMCAT_OPTS="$TOMCAT_OPTS ${JOLOKIA_OPTS} -Djava.security.egd=file:/dev/./urandom"
+export TOMCAT_OPTS="$TOMCAT_OPTS $(/jolokia) -Djava.security.egd=file:/dev/./urandom"
 /opt/tomcat/bin/tomcat run

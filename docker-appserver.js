@@ -13,7 +13,6 @@ var stream = require('stream');
 
 // Set to true for extra debugging
 var DEBUG = false;
-var JOLOKIA_BASE_IMAGE = "java-jolokia";
 
 JSON.minify = JSON.minify || require("node-json-minify");
 
@@ -28,11 +27,6 @@ function processServers(servers, opts) {
 }
 (function() {
     var opts = parseOpts();
-
-    if (opts.options.jolokia) {
-        processServers([JOLOKIA_BASE_IMAGE],opts);
-        return;
-    }
 
     // All supported servers which must be present as a sub-directory
     var servers = getServers(opts);
@@ -218,7 +212,7 @@ function getServers(opts) {
 
 function getAllServers() {
     return _.filter(fs.readdirSync(__dirname), function (f) {
-        return fs.existsSync(f + "/config.json") && f !== JOLOKIA_BASE_IMAGE;
+        return fs.existsSync(f + "/config.json");
     });
 }
 
@@ -322,7 +316,6 @@ function debug(msg) {
 function parseOpts() {
     var Getopt = require('node-getopt');
     var getopt = new Getopt([
-        ['j' , 'jolokia', 'Build  java-jolokia only' ],
         ['s' , 'server=ARG+', 'Servers for which to create container images (e.g. "tomcat")'],
         ['v' , 'version=ARG+', 'Versions of a given server to create (e.g. "7.0" for tomcat)'],
         ['b' , 'build', 'Build image(s)'],
