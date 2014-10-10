@@ -51,6 +51,7 @@ Using Jolokia JVM agent capability to attach to an already running jav process, 
 **Example** using https://github.com/jboss/dockerfiles/blob/master/wildfly/Dockerfile
 ```bash
 docker run \
+  -P -p 8778 \
   -v /data/installers/jolokia-jvm-1.2.2-agent.jar:/opt/jolokia/jolokia-jvm-1.2.2-agent.jar \
   -it jboss/wildfly  \
   sh -c 'exec /opt/wildfly/bin/standalone.sh  -b 0.0.0.0 -bmanagement 0.0.0.0 &  \
