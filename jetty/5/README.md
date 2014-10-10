@@ -18,8 +18,7 @@ exposed from a directory */maven*
 This image will enable a Jolokia agent during startup which can be reached
 by default within the container at port 8778.
 
-The environment variable `$JOLOKIA_DISABLE` can be set to any value so that
-agent won't be started.
+The environment variable `$JOLOKIA_OFF` can be set so that the agent won't start.
 
 More information about can be found in the description of jolokia/java-jolokia:7 [jolokia/java-jolokia:7](https://registry.hub.docker.com/u/jolokia/java-jolokia:7)
 
