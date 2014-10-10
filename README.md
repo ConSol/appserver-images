@@ -51,7 +51,6 @@ Using Jolokia JVM agent capability to attach to an already running jav process, 
 **Example** using https://github.com/jboss/dockerfiles/blob/master/wildfly/Dockerfile
 ```bash
 docker run \
-  -u root \
   -e "LAUNCH_JBOSS_IN_BACKGROUND=true" \
   -e "JBOSS_PIDFILE=/opt/wildfly/jboss.pid" \
   -v /data/installers/jolokia-jvm-1.2.2-agent.jar:/opt/jolokia/jolokia-jvm-1.2.2-agent.jar \
@@ -60,4 +59,12 @@ docker run \
   while ! curl -m 10 http://localhost:8080 ; do echo still down ; sleep 1s ; done ; \
   java -jar /opt/jolokia/jolokia-jvm-1.2.2-agent.jar --host 0.0.0.0 $(cat $JBOSS_PIDFILE); \
   sh'
+```
+where:
+- `/data/installers/jolokia-jvm-1.2.2-agent.jar` is a path on your host
+- `while ! curl -m 10 http://localhost:8080 ; do echo still down ; sleep 1s ; done ;` is needed due to peculiar behavior of Wildfly, classloading and agents. Basically we are just waiting for Wildfly to be up and running.
+- `$JBOSS_PIDFILE` instead of using the facility to store the process pid, we could leverage Jolokia's regexp support: 
+```
+<pid/regexp> can be either a numeric process id or a regular expression. A regular expression is matched
+against the processes' names (ignoring case) and must be specific enough to select exactly one process.
 ```
