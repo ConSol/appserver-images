@@ -11,7 +11,7 @@ integration tests
 Features:
 
 * Jetty Version: **{{= it.config.version}}**
-* Java Version: **{{= it.javaVersion}}** (base image: *{{= it.javaBaseImage}}*)
+* Java Version: **{{= it.javaVersion}}** (base image: *{{= it.javaJolokiaBaseImage}}*)
 * Port: **8080**
 * Command: `/opt/jetty/bin/deploy-and-run.sh` which links .war files from */maven* to 
   */opt/jetty/webapps* and then calls `/opt/jetty/bin/jetty.sh run`
