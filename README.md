@@ -43,3 +43,24 @@ Supported servers:
    jetty: 4, 5, 6, 7, 8, 9
    tomcat: 3, 4, 5, 5.5, 6, 7, 8
 ````
+
+### A generic pattern to use inject Jolokia agent in JVM based Docker containers without altering them.
+
+Using Jolokia JVM agent capability to attach to an already running jav process, we can use that strategy to inject the agent in pre-existing Docker image without the need to alter them:
+
+**Example** using https://github.com/jboss/dockerfiles/blob/master/wildfly/Dockerfile
+```bash
+docker run \
+  -P -p 8778 \
+  -v /data/installers/jolokia-jvm-1.2.2-agent.jar:/opt/jolokia/jolokia-jvm-1.2.2-agent.jar \
+  -it jboss/wildfly  \
+  sh -c 'exec /opt/wildfly/bin/standalone.sh  -b 0.0.0.0 -bmanagement 0.0.0.0 &  \
+  while ! curl -m 10 http://localhost:8080 ; do echo still down ; sleep 1s ; done ; \
+  java -jar /opt/jolokia/jolokia-jvm-1.2.2-agent.jar --host 0.0.0.0 ".*jboss-modules.*"; \
+  sh'
+```
+Where:
+- `/data/installers/jolokia-jvm-1.2.2-agent.jar` is a path on your host
+- `while ! curl -m 10 http://localhost:8080 ; do echo still down ; sleep 1s ; done ;` is needed due to peculiar behavior of Wildfly, classloading and agents. Basically we are just waiting for Wildfly to be up and running.
+- `".*jboss-modules.*"` is a regexp to identify a unique process in the output of `ps ax`
+- instead of using `-v` to inject a host file inside the container you could consider a more portable approach with **Docker data only containers**. See http://www.tech-d.net/2013/12/16/persistent-volumes-with-docker-container-as-volume-pattern/
