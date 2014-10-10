@@ -9,4 +9,4 @@ if [ -d $DIR ]; then
   done
 fi
 cd /opt/jetty
-java $(/jolokia) -Djava.security.egd=file:/dev/./urandom -jar ./start.jar
+java $(jolokia_opts) -Djava.security.egd=file:/dev/./urandom -jar ./start.jar

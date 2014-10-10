@@ -10,5 +10,5 @@ if [ -d $DIR ]; then
 fi
 
 # Use faster (though more unsecure) random number generator
-export {{= it.config.optsVar}}="${{= it.config.optsVar}} $(/jolokia) -Djava.security.egd=file:/dev/./urandom"
+export {{= it.config.optsVar}}="${{= it.config.optsVar}} $(jolokia_opts) -Djava.security.egd=file:/dev/./urandom"
 /opt/tomcat/bin/{{= it.config.runCmd}} run

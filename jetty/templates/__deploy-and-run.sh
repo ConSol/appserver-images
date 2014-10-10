@@ -8,5 +8,5 @@ if [ -d $DIR ]; then
      ln -s $i /opt/jetty/webapps/$file
   done
 fi
-export JAVA_OPTIONS="$JAVA_OPTIONS $(/jolokia) -Djava.security.egd=file:/dev/./urandom"
+export JAVA_OPTIONS="$JAVA_OPTIONS $(jolokia_opts) -Djava.security.egd=file:/dev/./urandom"
 /usr/bin/env bash /opt/jetty/bin/jetty.sh run
