@@ -5,7 +5,7 @@ by default within the container at port 8778.
 
 The environment variable `$JOLOKIA_OFF` can be set so that the agent won't start.
 
-More information about can be found in the description of {{= it.javaJolokiaBaseImage}} [{{= it.javaJolokiaBaseImage}}](https://registry.hub.docker.com/u/{{= it.javaJolokiaBaseImage}})
+More information about can be found at [{{= it.javaJolokia}}](https://registry.hub.docker.com/u/{{= it.javaJolokia}})
 =============================================================================
 == readmeDeploymentInstruction ==============================================
 

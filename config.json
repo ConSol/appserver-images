@@ -1,4 +1,6 @@
 {
+    "javaJolokia" : "jolokia/java-jolokia",
+
     // Overall base image
     "javaJolokiaBaseImage" : "jolokia/java-jolokia:7",
 
