@@ -280,19 +280,38 @@ function getResponseStream() {
     return buildResponseStream;
 }
 
+function addSslIfNeeded(param,opts) {
+    var port = param.port;
+    if (port === "2376") {
+        // Its SSL
+        var options = opts.options;
+        var certPath = options.certPath || process.env.DOCKER_CERT_PATH || process.env.HOME + ".docker";
+        return _.extend(param,{
+            protocol: "https",
+            ca: fs.readFileSync(certPath + '/ca.pem'),
+            cert: fs.readFileSync(certPath + '/cert.pem'),
+            key: fs.readFileSync(certPath + '/key.pem')
+        });
+    } else {
+        return _.extend(param,{
+            protocol: "http"
+        });
+    }
+}
+
 function getDockerConnectionsParams(opts) {
     if (opts.options.host) {
-        return {
-            "host": "http://" + opts.options.host,
+        return addSslIfNeeded({
+            "host": opts.options.host,
             "port": opts.options.port || 2375
-        };
+        },opts);
     } else if (process.env.DOCKER_HOST) {
         var parts = process.env.DOCKER_HOST.match(/^tcp:\/\/(.+?)\:?(\d+)?$/i);
         if (parts !== null) {
-            return {
-                "host" : "http://" + parts[1],
+            return addSslIfNeeded({
+                "host" : parts[1],
                 "port" : parts[2] || 2375
-            };
+            },opts);
         } else {
             return {
                 "socketPath" : process.env.DOCKER_HOST
@@ -300,7 +319,8 @@ function getDockerConnectionsParams(opts) {
         }
     } else {
         return {
-            "host" : "http://localhost",
+            "protocol" : "http",
+            "host" : "localhost",
             "port" : 2375
         };
     }

@@ -48,11 +48,11 @@
             "toRemove": [ "examples", "docs" ]
         },
         "7.0": {
-            "version": "7.0.55",
+            "version": "7.0.56",
             "toRemove": [ "examples", "docs" ]
         },
         "8.0": {
-            "version": "8.0.9",
+            "version": "8.0.14",
             "toRemove": [ "examples", "docs" ]
         }
     }

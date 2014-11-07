@@ -26,7 +26,7 @@ More information about can be found at [jolokia/java-jolokia](https://registry.h
 Features:
 
 * Jetty Version: **5.1.12**
-* Java Version: **OpenJDK 1.7.0_65 (7u65-2.5.0-2)** (base image: *jolokia/java-jolokia:7*)
+* Java Version: **OpenJDK 1.7.0_65 (7u71-2.5.3-1)** (base image: *jolokia/java-jolokia:7*)
 * Port: **8080**
 * Command: `/opt/jetty/bin/deploy-and-run.sh` which links .war files from */maven* to 
   */opt/jetty/webapps* and then calls `/opt/jetty/bin/jetty.sh run`

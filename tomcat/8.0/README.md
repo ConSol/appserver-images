@@ -25,8 +25,8 @@ More information about can be found at [jolokia/java-jolokia](https://registry.h
 
 Features:
 
-* Tomcat Version: **8.0.9**
-* Java Version: **OpenJDK 1.7.0_65 (7u65-2.5.0-2)** (base image: *jolokia/java-jolokia:7*)
+* Tomcat Version: **8.0.14**
+* Java Version: **OpenJDK 1.7.0_65 (7u71-2.5.3-1)** (base image: *jolokia/java-jolokia:7*)
 * Port: **8080**
 * User **admin** (Password: **admin**) has been added to access the admin
   applications */host-manager* and */manager*)

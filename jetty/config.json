@@ -10,13 +10,13 @@
             "mappings": { "__deploy-and-run.sh"    : "deploy-and-run.sh"  }
         },
         "9": {
-            "version": "9.2.2.v20140723"
+            "version": "9.2.4.v20141103"
         },
         "8": {
-            "version": "8.1.15.v20140411"
+            "version": "8.1.16.v20140903"
         },
         "7": {
-            "version": "7.6.15.v20140411"
+            "version": "7.6.16.v20140903"
         },
         "6": {
              "version": "6.1.26",
