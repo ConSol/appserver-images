@@ -7,7 +7,7 @@ integration tests
 
 During startup a directory specified by the environment variable `DEPLOY_DIR`
 (*/maven* by default) is checked for .war files. If there
-are any, they are linked into Jetty's *webapps/* directory for automatic
+are any, they are linked into the *webapps/* directory for automatic
 deployment. This plays nicely with the Docker maven plugin from
 https://github.com/rhuss/docker-maven-plugin/ and its 'assembly' mode which
 can automatically create Docker data container with Maven artifacts
@@ -20,12 +20,13 @@ by default within the container at port 8778.
 
 The environment variable `$JOLOKIA_OFF` can be set so that the agent won't start.
 
-More information about can be found at [jolokia/java-jolokia](https://registry.hub.docker.com/u/jolokia/java-jolokia)
+More information about Jolokia configuration options can be found at
+[jolokia/java-jolokia](https://registry.hub.docker.com/u/jolokia/java-jolokia)
 
 
 Features:
 
-* Jetty Version: **9.2.4.v20141103**
+* Jetty Version: **9.2.6.v20141205**
 * Java Version: **OpenJDK 1.7.0_65 (7u71-2.5.3-1)** (base image: *jolokia/java-jolokia:7*)
 * Port: **8080**
 * Command: `/opt/jetty/bin/deploy-and-run.sh` which links .war files from */maven* to 
