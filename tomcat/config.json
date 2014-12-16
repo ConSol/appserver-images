@@ -44,15 +44,15 @@
             "toRemove": [ "balancer", "jsp-examples", "servlets-examples", "tomcat-docs", "webdav" ]
         },
         "6.0": {
-            "version": "6.0.41",
+            "version": "6.0.43",
             "toRemove": [ "examples", "docs" ]
         },
         "7.0": {
-            "version": "7.0.56",
+            "version": "7.0.57",
             "toRemove": [ "examples", "docs" ]
         },
         "8.0": {
-            "version": "8.0.14",
+            "version": "8.0.15",
             "toRemove": [ "examples", "docs" ]
         }
     }
