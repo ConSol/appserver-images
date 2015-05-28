@@ -27,7 +27,7 @@ More information about Jolokia configuration options can be found at
 Features:
 
 * Tomcat Version: **5.5.36**
-* Java Version: **OpenJDK 1.7.0_65 (7u71-2.5.3-1)** (base image: *jolokia/java-jolokia:7*)
+* Java Version: **OpenJDK 1.7.0_79 (7u79-2.5.5-1~deb8u)** (base image: *jolokia/java-jolokia:7*)
 * Port: **8080**
 * User **admin** (Password: **admin**) has been added to access the admin
   applications */host-manager* and */manager*)

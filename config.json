@@ -5,7 +5,7 @@
     "javaJolokiaBaseImage" : "jolokia/java-jolokia:7",
 
     // Java version contained in base image
-    "javaVersion": "OpenJDK 1.7.0_65 (7u71-2.5.3-1)",
+    "javaVersion": "OpenJDK 1.7.0_79 (7u79-2.5.5-1~deb8u)",
 
     "javaHome" : "/usr/lib/jvm/java-7-openjdk-amd64",
 

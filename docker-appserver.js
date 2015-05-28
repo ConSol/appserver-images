@@ -251,9 +251,9 @@ function doBuildImages(docker,server,versions,nocache) {
                 }
                 stream.pipe(getResponseStream());
                 stream.on('end', function () {
-                    docker.getImage(fullName).tag({repo: name }, function (error, result) {
-                        if (error) { throw error; }
+                    docker.getImage(fullName).tag({repo: name, force: 1}, function (error, result) {
                         console.log(result);
+                        if (error) { throw error; }
                     });
                     doBuildImages(docker,server,versions,nocache);
                 });
