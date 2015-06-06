@@ -1,7 +1,7 @@
 {
     "versions" : [ "4", "5", "6", "7", "8", "9" ],
 
-    "buildVersion" : 3,
+    "buildVersion" : 4,
 
     "config": {
         "default": {
@@ -16,16 +16,16 @@
             "version": "8.1.17.v20150415"
         },
         "7": {
-            "version": "7.6.17.v20150415:w"
+            "version": "7.6.17.v20150415"
         },
         "6": {
-             "version": "6.1.26",
-             "downloadUrl": "http://dist.codehaus.org/jetty/jetty-${JETTY_VERSION}/jetty-${JETTY_VERSION}.zip",
+             "version": "6.1.18",
+             "downloadUrl": "http://mirrors.ibiblio.org/maven/jetty/jetty-${JETTY_VERSION}/jetty-${JETTY_VERSION}.zip",
              "baseName": "jetty"
         },
         "5": {
             "version":     "5.1.12",
-            "downloadUrl": "http://dist.codehaus.org/jetty/jetty-5.1.x/jetty-${JETTY_VERSION}.zip",
+            "downloadUrl": "http://mirrors.ibiblio.org/maven/jetty/jetty-5.1.x/jetty-${JETTY_VERSION}.zip",
             "baseName":    "jetty",
             "mappings":    {
                 "__deploy-and-run-45.sh": "deploy-and-run.sh"
@@ -33,7 +33,7 @@
         },
         "4": {
             "version": "4.2.27",
-            "downloadUrl": "http://dist.codehaus.org/jetty/jetty-4.2.x/jetty-${JETTY_VERSION}.zip",
+            "downloadUrl": "http://mirrors.ibiblio.org/maven/jetty/jetty-4.2.x/jetty-${JETTY_VERSION}.zip",
             "baseName": "jetty",
             "mappings" : { "__deploy-and-run-45.sh" : "deploy-and-run.sh" }
         }

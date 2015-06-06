@@ -26,7 +26,7 @@ More information about Jolokia configuration options can be found at
 
 Features:
 
-* Jetty Version: **7.6.17.v20150415:w**
+* Jetty Version: **7.6.17.v20150415**
 * Java Version: **OpenJDK 1.7.0_79 (7u79-2.5.5-1~deb8u)** (base image: *jolokia/java-jolokia:7*)
 * Port: **8080**
 * Command: `/opt/jetty/bin/deploy-and-run.sh` which links .war files from */maven* to 
