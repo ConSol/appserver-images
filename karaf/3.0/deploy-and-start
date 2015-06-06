@@ -1,0 +1,17 @@
+#!/bin/sh
+
+
+DIR=${DEPLOY_DIR:-/opt/jboss/deploy}
+echo "Copying offline repo"
+cp -rf $DIR/fabric8/repository/* /opt/jboss/karaf/system/
+echo "Checking for kars in $DIR/kars"
+if [ -d $DIR ]; then
+  for i in $DIR/*.kar; do
+     file=$(basename $i)
+     echo "Linking $i --> /opt/jboss/karaf/deploy/$file"
+     ln -s $i /opt/jboss/karaf/deploy/$file
+  done
+fi
+# Use faster (though more unsecure) random number generator
+export KARAF_OPTS="$KARAF_OPTS -Djava.security.egd=file:/dev/./urandom"
+/opt/jboss/karaf/bin/karaf server

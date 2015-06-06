@@ -1,0 +1,23 @@
+#!/bin/sh
+
+cat <<EOF
+This is an STI ready Apache Karaf image.
+You can use it with the sti tool, to build a docker image out of your source code.
+
+sti build <url to git repo> fabric8/karaf-<version> <target image name> 
+
+The git url is expected to host a maven project for karaf, that will generate as part of its output any of the following:
+
+i) One or more kar archives.
+ii) A maven repo under fabric8/repository
+
+
+Running an empty container:
+to spin up an empty karaf container with this image you can just:
+
+docker run fabric8/karaf-<version> deploy-and-start
+
+Details:
+If a pom.xml is present in the source directory, the project is built with maven and the
+output in target will be copied into the /opt/jboss/deploy directory.
+EOF
