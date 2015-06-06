@@ -16,6 +16,8 @@ var DEBUG = false;
 
 JSON.minify = JSON.minify || require("node-json-minify");
 
+var globalConfig = getConfig("config.json");
+
 function processServers(servers, opts) {
 // Create build files
     createAutomatedBuilds(servers, opts);
@@ -38,20 +40,16 @@ function processServers(servers, opts) {
 function createAutomatedBuilds(servers, opts) {
     console.log("Creating Automated Builds\n".cyan);
 
-    var globalConfig = getConfig("config.json");
     var fragments = getFragments("fragments.txt");
 
     servers.forEach(function (server) {
-        console.log(server.magenta);
-        var config =
-            _.extend({},
-                globalConfig,
-                getServersConfig(server));
+        console.log(server.name.magenta);
+        var config = server.config;
         var versions = extractVersions(config,opts.options.version);
-        execWithTemplates(server, function (templates) {
+        execWithTemplates(server.name, function (templates) {
             versions.forEach(function (version) {
                 console.log("    " + version.green);
-                ensureDir(__dirname + "/" + server + "/" + version);
+                ensureDir(__dirname + "/" + server.name + "/" + version);
                 var changed = false;
                 templates.forEach(function (template) {
                     var file = checkForMapping(config, version, template.file);
@@ -62,7 +60,7 @@ function createAutomatedBuilds(servers, opts) {
                     var filledFragments = fillFragments(fragments,config);
                     var templateHasChanged =
                         fillTemplate(
-                                server + "/" + version + "/" + file,
+                                server.name + "/" + version + "/" + file,
                             template.templ,
                             _.extend(
                                 {},
@@ -91,6 +89,12 @@ function getConfig(path) {
         config = JSON.parse(JSON.minify(fs.readFileSync(path, "utf8")));
     }
     return config;
+}
+
+function getServerConfig(name) {
+    return _.extend({},
+            globalConfig,
+            JSON.parse(JSON.minify(fs.readFileSync(__dirname + "/" + name + "/config.json", "utf8"))));
 }
 
 function getFragments(path) {
@@ -135,8 +139,8 @@ function buildImages(servers,opts) {
     var docker = new Docker(getDockerConnectionsParams(opts));
 
     servers.forEach(function(server) {
-        console.log(server.magenta);
-        var versions = extractVersions(getServersConfig(server),opts.options.version);
+        console.log(server.name.magenta);
+        var versions = extractVersions(server.config,opts.options.version);
         doBuildImages(docker,server,versions,opts.options.nocache);
     });
 }
@@ -201,23 +205,22 @@ function ensureDir(dir) {
 
 
 function getServers(opts) {
-    if (opts.options.server) {
-        return _.filter(getAllServers(), function(server) {
+    var serverNames;
+
+    var allServerNames =  _.filter(fs.readdirSync(__dirname), function (f) {
+        return fs.existsSync(f + "/config.json");
+    });
+
+    if (opts && opts.options && opts.options.server) {
+        serverNames = _.filter(allServerNames, function(server) {
             return _.contains(opts.options.server,server);
         });
     } else {
-        return getAllServers();
+        serverNames = allServerNames;
     }
-}
-
-function getAllServers() {
-    return _.filter(fs.readdirSync(__dirname), function (f) {
-        return fs.existsSync(f + "/config.json");
-    });
-}
-
-function getServersConfig(server) {
-    return JSON.parse(JSON.minify(fs.readFileSync(__dirname + "/" + server + "/config.json", "utf8")));
+    return _.map(serverNames, function (name) {
+        return { "name": name, "config": getServerConfig(name)};
+    })
 }
 
 function extractVersions(config,versionsFromOpts) {
@@ -230,8 +233,7 @@ function extractVersions(config,versionsFromOpts) {
     }
 }
 
-function getFullVersion(server,version) {
-    var config = getServersConfig(server);
+function getFullVersion(config,version) {
     var buildVersion = config.buildVersion;
     return config.config[version].version + (buildVersion ? "-" + buildVersion : "");
 }
@@ -240,9 +242,10 @@ function doBuildImages(docker,server,versions,nocache) {
     if (versions.length > 0) {
         var version = versions.shift();
         console.log("    " + version.green);
-        var tar = child.spawn(tarCmd, ['-c', '.'], { cwd: __dirname + "/" + server + "/" + version });
-        var name = "consol/" + server + (version !== "0" ? "-" + version : "");
-        var fullName = name + ":" + getFullVersion(server,version);
+        var tar = child.spawn(tarCmd, ['-c', '.'], { cwd: __dirname + "/" + server.name + "/" + version });
+        var repoUser = server.config.repoUser + "/" || "";
+        var name = repoUser + server.name + (version !== "0" ? "-" + version : "");
+        var fullName = name + ":" + getFullVersion(server.config,version);
         docker.buildImage(
             tar.stdout, { "t": fullName, "forcerm": true, "q": true, "nocache": nocache ? "true" : "false" },
             function (error, stream) {
@@ -355,10 +358,10 @@ function parseOpts() {
         "which can be registered at hub.docker.io\n\n" +
         "It uses templates for covering multiple version of appserver.\n\n" +
         "Supported servers:\n\n";
-    var servers = getAllServers();
+    var servers = getServers();
     servers.forEach(function (server) {
-        var config = getServersConfig(server);
-        help += "   " + server  + ": " + config.versions.join(", ") + "\n";
+        var config = server.config;
+        help += "   " + server.name  + ": " + config.versions.join(", ") + "\n";
     });
 
     return getopt.bindHelp(help).parseSystem();

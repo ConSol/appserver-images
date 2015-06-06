@@ -1,4 +1,9 @@
 {
+
+    // Image prefix to use
+    "repoUser" : "consol",
+
+    // Base image
     "javaJolokia" : "jolokia/java-jolokia",
 
     // Overall base image
