@@ -33,7 +33,8 @@ ADD jolokia.properties /opt/jolokia/jolokia.properties
 ADD deploy-and-run.sh /opt/karaf/bin/ 
 
 RUN chmod a+x /opt/karaf/bin/deploy-and-run.sh && \
-    rm -rf {{~toRemove :value:index}}/opt/karaf/deploy/{{=value}} {{~}}
+    rm -rf {{~toRemove :value:index}}/opt/karaf/deploy/{{=value}} {{~}} && \
+    perl -p -i -e 's/^(log4j.rootLogger.*?,\s*)out(.*)/${1}stdout${2}/' /opt/karaf/etc/org.ops4j.pax.logging.cfg
 
 ENV PATH $PATH:/opt/karaf/bin
 
