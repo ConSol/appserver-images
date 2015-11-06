@@ -68,6 +68,66 @@
                 </assembly>
               </build>
             </image>
+            <image>
+              <alias>tomcat-6.0</alias>
+              <name>consol/tomcat-6.0</name>
+              <build>
+                <tags>
+                  <tag>latest</tag>
+                </tags>
+                <assembly>
+                  <dockerFileDir>6.0</dockerFileDir>
+                </assembly>
+              </build>
+            </image>
+            <image>
+              <alias>tomcat-5.5</alias>
+              <name>consol/tomcat-5.5</name>
+              <build>
+                <tags>
+                  <tag>latest</tag>
+                </tags>
+                <assembly>
+                  <dockerFileDir>5.5</dockerFileDir>
+                </assembly>
+              </build>
+            </image>
+            <image>
+              <alias>tomcat-5.0</alias>
+              <name>consol/tomcat-5.0</name>
+              <build>
+                <tags>
+                  <tag>latest</tag>
+                </tags>
+                <assembly>
+                  <dockerFileDir>5.0</dockerFileDir>
+                </assembly>
+              </build>
+            </image>
+            <image>
+              <alias>tomcat-4.1</alias>
+              <name>consol/tomcat-4.1</name>
+              <build>
+                <tags>
+                  <tag>latest</tag>
+                </tags>
+                <assembly>
+                  <dockerFileDir>4.1</dockerFileDir>
+                </assembly>
+              </build>
+            </image>
+            <image>
+              <alias>tomcat-3.3</alias>
+              <name>consol/tomcat-3.3</name>
+              <build>
+                <tags>
+                  <tag>latest</tag>
+                </tags>
+                <assembly>
+                  <dockerFileDir>3.3</dockerFileDir>
+                </assembly>
+              </build>
+            </image>
           </images>
         </configuration>
       </plugin>

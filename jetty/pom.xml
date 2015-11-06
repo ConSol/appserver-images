@@ -59,6 +59,42 @@
                 </assembly>
               </build>
             </image>
+            <image>
+              <alias>jetty-6</alias>
+              <name>consol/jetty-6</name>
+              <build>
+                <tags>
+                  <tag>latest</tag>
+                </tags>
+                <assembly>
+                  <dockerFileDir>6</dockerFileDir>
+                </assembly>
+              </build>
+            </image>
+            <image>
+              <alias>jetty-5</alias>
+              <name>consol/jetty-5</name>
+              <build>
+                <tags>
+                  <tag>latest</tag>
+                </tags>
+                <assembly>
+                  <dockerFileDir>5</dockerFileDir>
+                </assembly>
+              </build>
+            </image>
+            <image>
+              <alias>jetty-4</alias>
+              <name>consol/jetty-4</name>
+              <build>
+                <tags>
+                  <tag>latest</tag>
+                </tags>
+                <assembly>
+                  <dockerFileDir>4</dockerFileDir>
+                </assembly>
+              </build>
+            </image>
           </images>
         </configuration>
       </plugin>
