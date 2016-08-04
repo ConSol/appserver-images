@@ -11,6 +11,7 @@
   <modules>
     <module>jetty</module>
     <module>tomcat</module>
+    <module>glassfish</module>
     <module>wildfly</module>
     <module>karaf</module>
   </modules>
