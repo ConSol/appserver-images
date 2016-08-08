@@ -30,9 +30,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>v3</dockerFileDir>
-                </assembly>
+                <dockerFileDir>v3</dockerFileDir>
               </build>
               <run>
                 <namingStrategy>alias</namingStrategy>

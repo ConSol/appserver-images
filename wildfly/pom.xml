@@ -30,9 +30,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>10.0</dockerFileDir>
-                </assembly>
+                <dockerFileDir>10.0</dockerFileDir>
               </build>
               <run>
                 <namingStrategy>alias</namingStrategy>
@@ -63,9 +61,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>9.0</dockerFileDir>
-                </assembly>
+                <dockerFileDir>9.0</dockerFileDir>
               </build>
             </image>
             <image>
@@ -75,9 +71,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>8.2</dockerFileDir>
-                </assembly>
+                <dockerFileDir>8.2</dockerFileDir>
               </build>
             </image-->
           </images>

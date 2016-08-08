@@ -30,9 +30,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>8.0</dockerFileDir>
-                </assembly>
+                <dockerFileDir>8.0</dockerFileDir>
               </build>
               <run>
                 <namingStrategy>alias</namingStrategy>
@@ -63,9 +61,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>7.0</dockerFileDir>
-                </assembly>
+                <dockerFileDir>7.0</dockerFileDir>
               </build>
             </image>
             <image>
@@ -75,9 +71,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>6.0</dockerFileDir>
-                </assembly>
+                <dockerFileDir>6.0</dockerFileDir>
               </build>
             </image>
             <image>
@@ -87,9 +81,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>5.5</dockerFileDir>
-                </assembly>
+                <dockerFileDir>5.5</dockerFileDir>
               </build>
             </image>
             <image>
@@ -99,9 +91,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>5.0</dockerFileDir>
-                </assembly>
+                <dockerFileDir>5.0</dockerFileDir>
               </build>
             </image>
             <image>
@@ -111,9 +101,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>4.1</dockerFileDir>
-                </assembly>
+                <dockerFileDir>4.1</dockerFileDir>
               </build>
             </image>
             <image>
@@ -123,9 +111,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>3.3</dockerFileDir>
-                </assembly>
+                <dockerFileDir>3.3</dockerFileDir>
               </build>
             </image>
           </images>

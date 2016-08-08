@@ -30,9 +30,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>3.0</dockerFileDir>
-                </assembly>
+                <dockerFileDir>3.0</dockerFileDir>
               </build>
             </image>
             <image>
@@ -42,9 +40,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>2.4</dockerFileDir>
-                </assembly>
+                <dockerFileDir>2.4</dockerFileDir>
               </build>
             </image>
           </images>

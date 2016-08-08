@@ -30,9 +30,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>9</dockerFileDir>
-                </assembly>
+                <dockerFileDir>9</dockerFileDir>
               </build>
             </image>
             <image>
@@ -42,9 +40,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>8</dockerFileDir>
-                </assembly>
+                <dockerFileDir>8</dockerFileDir>
               </build>
             </image>
             <image>
@@ -54,9 +50,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>7</dockerFileDir>
-                </assembly>
+                <dockerFileDir>7</dockerFileDir>
               </build>
             </image>
             <image>
@@ -66,9 +60,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>6</dockerFileDir>
-                </assembly>
+                <dockerFileDir>6</dockerFileDir>
               </build>
             </image>
             <image>
@@ -78,9 +70,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>5</dockerFileDir>
-                </assembly>
+                <dockerFileDir>5</dockerFileDir>
               </build>
             </image>
             <image>
@@ -90,9 +80,7 @@
                 <tags>
                   <tag>latest</tag>
                 </tags>
-                <assembly>
-                  <dockerFileDir>4</dockerFileDir>
-                </assembly>
+                <dockerFileDir>4</dockerFileDir>
               </build>
             </image>
           </images>
